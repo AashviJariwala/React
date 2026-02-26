@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
-const Role = () => {
+const Department = () => {
   const [name, setName] = useState("");
   const [result, setResult] = useState([]);
   const [error, setError] = useState("");
   const [deleteMode, setDeleteMode] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [selectedRoles, setSelectedRoles] = useState([]);
-  const [selectedEditRoles, setSelectedEditRoles] = useState("");
+  const [selectedDepts, setselectedDepts] = useState([]);
+  const [selectedEditDepts, setselectedEditDepts] = useState("");
 
   const containerRef = useRef(null);
 
@@ -16,7 +16,7 @@ const Role = () => {
 
   function getData() {
     axios
-      .get("http://localhost:3000/admin/displayRole", {
+      .get("http://localhost:3000/admin/displayDept", {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -43,7 +43,7 @@ const Role = () => {
         !containerRef.current.contains(event.target)
       ) {
         setDeleteMode(false);
-        setSelectedEditRoles("");
+        setselectedEditDepts("");
       }
       if (
         editMode &&
@@ -51,7 +51,7 @@ const Role = () => {
         !containerRef.current.contains(event.target)
       ) {
         setEditMode(false);
-        setSelectedRoles("");
+        setselectedDepts("");
       }
     }
 
@@ -63,7 +63,7 @@ const Role = () => {
   }, [deleteMode, editMode]);
 
   const handleCheckboxChange = (id) => {
-    setSelectedRoles((prev) =>
+    setselectedDepts((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
   };
@@ -71,7 +71,7 @@ const Role = () => {
   const handleEditCheckboxChange = (id, name) => {
     console.log("edit");
     setName(name);
-    setSelectedEditRoles(selectedEditRoles === id ? null : id);
+    setselectedEditDepts(selectedEditDepts === id ? null : id);
   };
 
   const handleDeleteClick = () => {
@@ -80,13 +80,13 @@ const Role = () => {
       return;
     }
 
-    // if (selectedRoles.length === 0) {
+    // if (selectedDepts.length === 0) {
     //   alert("Please select at least one role to delete.");
     //   return;
     // }
 
     axios
-      .delete("http://localhost:3000/admin/deleteRole/" + selectedRoles, {
+      .delete("http://localhost:3000/admin/deleteDept/" + selectedDepts, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -112,7 +112,7 @@ const Role = () => {
 
     axios
       .put(
-        "http://localhost:3000/admin/editRole/" + selectedEditRoles,
+        "http://localhost:3000/admin/editDept/" + selectedEditDepts,
         {
           name,
         },
@@ -127,7 +127,7 @@ const Role = () => {
         getData();
         setName("");
         setEditMode(false);
-        setSelectedEditRoles("");
+        setselectedEditDepts("");
       })
       .catch((err) => {
         console.log(err.response.data.error);
@@ -142,7 +142,7 @@ const Role = () => {
     if (!editMode) {
       axios
         .post(
-          "http://localhost:3000/admin/insertRole",
+          "http://localhost:3000/admin/insertDept",
           {
             name,
           },
@@ -170,7 +170,7 @@ const Role = () => {
   return (
     <>
       <div className="role-container" ref={containerRef}>
-        <h2 className="title">Company Roles</h2>
+        <h2 className="title">Departments</h2>
         <div className="card-grid">
           {result.map((r) => (
             <div key={r._id} className="role-card">
@@ -187,12 +187,14 @@ const Role = () => {
                 <input
                   type="checkbox"
                   className="checkbox"
-                  checked={selectedEditRoles === r._id}
+                  checked={selectedEditDepts === r._id}
                   onChange={() => handleEditCheckboxChange(r._id, r.name)}
                   style={{ marginBottom: "10px", transform: "scale(1.3)" }}
                 />
               )}
-              <p style={{ textTransform: "capitalize",fontSize:"19px"}}>{r.name}</p>
+              <p style={{ textTransform: "capitalize", fontSize: "19px" }}>
+                {r.name}
+              </p>
             </div>
           ))}
         </div>
@@ -234,4 +236,4 @@ const Role = () => {
   );
 };
 
-export default Role;
+export default Department;

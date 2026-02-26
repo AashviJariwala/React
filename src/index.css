@@ -73,7 +73,6 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Playfair Display', serif;
-
 }
 
 .app-background {
@@ -108,6 +107,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+
 }
 
 /* Card style */
@@ -164,6 +164,7 @@ body {
 
 .login-btn:hover {
   background-color: #c48d5f;
+  color:white;
 }
 
 /* Error */
@@ -218,6 +219,14 @@ body {
   justify-content: center;
   align-items:flex-start;
   gap: 10px;
+}
+
+/*Button Container*/
+.button-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap:15px;
 }
 
 /* Button */
