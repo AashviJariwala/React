@@ -46,7 +46,7 @@ const Login = () => {
         <div id="d1" className="error-message"></div>
 
         <form onSubmit={handleSubmit}>
-          <div className="input-group">
+          <div className="input-group" style={{fontFamily: "'Playfair Display', serif"}}>
             <label>Email</label>
             <input
               type="text"

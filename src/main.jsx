@@ -5,6 +5,7 @@ import "@fontsource/poppins";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Login from "./ADMIN/Login.jsx";
 import Role from "./ADMIN/Role.jsx";
+import UserLogin from "./USER/Login.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -12,11 +13,12 @@ createRoot(document.getElementById("root")).render(
       <div className="app-content">
         <Router>
           <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/admin/login" element={<Login />} />
             <Route path="/role" element={<Role />} />
+            <Route path="/" element={<UserLogin />} />
           </Routes>
         </Router>
       </div>
     </div>
-  </StrictMode>
+  </StrictMode>,
 );
