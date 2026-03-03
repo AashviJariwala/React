@@ -8,6 +8,8 @@ import Role from "./ADMIN/Role.jsx";
 import UserLogin from "./USER/Login.jsx";
 import Department from "./ADMIN/Department.jsx";
 import Dashboard from "./ADMIN/Dashboard.jsx";
+import GoogleCallback from "./USER/GoogleCallback.jsx";
+import Authentication from "./USER/Authentication.jsx";
 import UserDashboard from "./USER/Dashboard.jsx";
 import AdminBackgroundLayout from "./AdminBackgroundLayout.jsx";
 import UserBackgroundLayout from "./UserBackgroundLayout.jsx";
@@ -64,6 +66,22 @@ createRoot(document.getElementById("root")).render(
           element={
             <UserBackgroundLayout>
               <UserDashboard />
+            </UserBackgroundLayout>
+          }
+        />
+        <Route
+          path="/google/callback"
+          element={
+            <UserBackgroundLayout>
+              <GoogleCallback />
+            </UserBackgroundLayout>
+          }
+        />
+        <Route
+          path="/authentication"
+          element={
+            <UserBackgroundLayout>
+              <Authentication />
             </UserBackgroundLayout>
           }
         />
