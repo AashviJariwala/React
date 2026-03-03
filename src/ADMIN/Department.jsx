@@ -52,6 +52,7 @@ const Department = () => {
       ) {
         setEditMode(false);
         setselectedDepts("");
+        setName("");
       }
     }
 
@@ -64,7 +65,7 @@ const Department = () => {
 
   const handleCheckboxChange = (id) => {
     setselectedDepts((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     );
   };
 
@@ -120,7 +121,7 @@ const Department = () => {
           headers: {
             Authorization: "Bearer " + token,
           },
-        }
+        },
       )
       .then((res) => {
         console.log(res.data.msg);
@@ -150,7 +151,7 @@ const Department = () => {
             headers: {
               Authorization: "Bearer " + token,
             },
-          }
+          },
         )
         .then((res) => {
           console.log(res.data.msg);
@@ -215,7 +216,7 @@ const Department = () => {
             <div id="d1" className="error-message"></div>
             <form method="post" onSubmit={handleSubmit}>
               <div className="input-group">
-                <label>Role Name</label>
+                <label>Department Name</label>
                 <input
                   type="text"
                   name="name"

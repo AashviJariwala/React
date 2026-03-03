@@ -52,6 +52,7 @@ const Role = () => {
       ) {
         setEditMode(false);
         setSelectedRoles("");
+        setName("");
       }
     }
 
@@ -64,7 +65,7 @@ const Role = () => {
 
   const handleCheckboxChange = (id) => {
     setSelectedRoles((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     );
   };
 
@@ -120,7 +121,7 @@ const Role = () => {
           headers: {
             Authorization: "Bearer " + token,
           },
-        }
+        },
       )
       .then((res) => {
         console.log(res.data.msg);
@@ -150,7 +151,7 @@ const Role = () => {
             headers: {
               Authorization: "Bearer " + token,
             },
-          }
+          },
         )
         .then((res) => {
           console.log(res.data.msg);
@@ -192,7 +193,9 @@ const Role = () => {
                   style={{ marginBottom: "10px", transform: "scale(1.3)" }}
                 />
               )}
-              <p style={{ textTransform: "capitalize",fontSize:"19px"}}>{r.name}</p>
+              <p style={{ textTransform: "capitalize", fontSize: "19px" }}>
+                {r.name}
+              </p>
             </div>
           ))}
         </div>
