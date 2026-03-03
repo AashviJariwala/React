@@ -169,7 +169,7 @@ const Role = () => {
   };
   return (
     <>
-      <div className="role-container" ref={containerRef}>
+      <div className="role-container center-layout" ref={containerRef}>
         <h2 className="title">Company Roles</h2>
         <div className="card-grid">
           {result.map((r) => (

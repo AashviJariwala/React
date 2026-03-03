@@ -6,14 +6,14 @@ const Dashboard = () => {
     <>
       <div className="button-container">
         <Link
-          to="/role"
+          to="/admin/role"
           className="login-btn"
           style={{ texDecoration: "none"}}
         >
           View Roles
         </Link>
         <Link
-          to="/dept"
+          to="/admin/dept"
           className="login-btn"
           style={{ texDecoration: "none"}}
         >

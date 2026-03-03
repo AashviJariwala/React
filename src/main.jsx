@@ -8,22 +8,66 @@ import Role from "./ADMIN/Role.jsx";
 import UserLogin from "./USER/Login.jsx";
 import Department from "./ADMIN/Department.jsx";
 import Dashboard from "./ADMIN/Dashboard.jsx";
+import UserDashboard from "./USER/Dashboard.jsx";
+import AdminBackgroundLayout from "./AdminBackgroundLayout.jsx";
+import UserBackgroundLayout from "./UserBackgroundLayout.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <div className="app-background">
-      <div className="app-content">
-        <Router>
-          <Routes>
-            <Route path="/admin/login" element={<Login />} />
-            <Route path="/admin" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/role" element={<Role />} />
-            <Route path="/" element={<UserLogin />} />
-            <Route path="/dept" element={<Department />} />
-          </Routes>
-        </Router>
-      </div>
-    </div>
-  </StrictMode>,
+    <Router>
+      <Routes>
+        {/* Admin routes */}
+
+        <Route
+          path="/admin"
+          element={
+            <AdminBackgroundLayout>
+              <Login />
+            </AdminBackgroundLayout>
+          }
+        />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <AdminBackgroundLayout>
+              <Dashboard />
+            </AdminBackgroundLayout>
+          }
+        />
+        <Route
+          path="/admin/role"
+          element={
+            <AdminBackgroundLayout>
+              <Role />
+            </AdminBackgroundLayout>
+          }
+        />
+        <Route
+          path="/admin/dept"
+          element={
+            <AdminBackgroundLayout>
+              <Department />
+            </AdminBackgroundLayout>
+          }
+        />
+        {/* User routes */}
+        <Route
+          path="/"
+          element={
+            <UserBackgroundLayout>
+              <UserLogin />
+            </UserBackgroundLayout>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <UserBackgroundLayout>
+              <UserDashboard />
+            </UserBackgroundLayout>
+          }
+        />
+      </Routes>
+    </Router>
+  </StrictMode>
 );

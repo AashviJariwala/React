@@ -30,7 +30,7 @@ const Login = () => {
         // console.log(res.data.data);
         document.getElementById("d1").innerHTML = "";
         sessionStorage.setItem("token", res.data.data);
-        navigate("/dashboard");
+        navigate("/admin/dashboard");
       })
       .catch((err) => {
         console.log(err.response.data.error);

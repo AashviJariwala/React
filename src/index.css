@@ -22,14 +22,6 @@ a:hover {
   color: #535bf2;
 }
 
-/* body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-} */
-
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -248,6 +240,31 @@ body {
 }
 
 
+
+/*USER*/
+
+.user-app-background {
+  min-height: 100vh;
+  background-image: url("/Images/backgroundImage.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+/* Faded overlay */
+.user-app-background::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.5); /* adjust fade here */
+  z-index: 0;
+}
+
+.user-app-content {
+  position: relative;
+  z-index: 1;
+}
 .google-btn {
   width: 100%;
   padding: 12px;
@@ -288,3 +305,4 @@ body {
 .google-consent-text p {
   line-height: 1.5;
 }
+
