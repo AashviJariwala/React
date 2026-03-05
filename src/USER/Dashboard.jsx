@@ -20,7 +20,7 @@ const localizer = dateFnsLocalizer({
 const Dashboard = () => {
   const [error, setError] = useState("");
 
-  const token=sessionStorage.getItem("userToken");
+  const token = sessionStorage.getItem("userToken");
   function getEvents() {
     axios
       .get("http://localhost:3000/calendar/syncFromGoogle", {
@@ -57,6 +57,7 @@ const Dashboard = () => {
         selectable
         views={["month", "week", "day"]}
       />
+      {error && <div className="error-message">{error}</div>}
     </div>
   );
 };
