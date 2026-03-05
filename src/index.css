@@ -161,10 +161,10 @@ body {
 
 /* Error */
 .error-message {
+  color: red;
   text-align: center;
   margin-bottom: 10px;
   font-size: 14px;
-  color: red;
 }
 
 
@@ -239,7 +239,51 @@ body {
   background-color: #c48d5f;
 }
 
+/* USER TABLE CARD */
 
+.user-table-wrapper {
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.user-table-card {
+  width: 90%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.user-table thead {
+  background-color: #d6a77a;
+  color: white;
+}
+
+.user-table th,
+.user-table td {
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.user-table tbody tr:hover {
+  background-color: rgba(214, 167, 122, 0.1);
+}
+
+.user-table img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
 
 /*USER*/
 
@@ -306,3 +350,97 @@ body {
   line-height: 1.5;
 }
 
+/* Custom File Upload */
+
+.custom-file-upload {
+  position: relative;
+  width: 100%;
+}
+
+.custom-file-upload input[type="file"] {
+  display: none;
+}
+
+.file-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  border-radius: 12px;
+  border: 2px dashed #d6a77a;
+  background: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s ease;
+  text-align: center;
+}
+
+.file-label::before {
+  content: "📁";
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+/* Calender dashboard */
+
+.calendar-card {
+  width: 96%;
+  background: #ffffff;   /* pure white */
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.rbc-month-view,
+.rbc-time-view,
+.rbc-calendar {
+  background: #ffffff !important;
+}
+
+.rbc-day-bg {
+  background: #ffffff;
+}
+
+.rbc-today {
+  background-color: #f5f5f5 !important;
+}
+
+.calendar-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.calendar-controls button {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #d6a77a;
+  background: white;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.calendar-controls button:hover {
+  background: #f5e6d8;
+}
+
+.active-btn {
+  background: #d6a77a !important;
+  color: white;
+  font-weight: 600;
+  border: none;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.calendar-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+}

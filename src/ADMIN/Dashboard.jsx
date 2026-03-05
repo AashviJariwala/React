@@ -6,16 +6,23 @@ const Dashboard = () => {
     <>
       <div className="button-container">
         <Link
+          to="/admin/user"
+          className="login-btn"
+          style={{ texDecoration: "none" }}
+        >
+          View Users
+        </Link>
+        <Link
           to="/admin/role"
           className="login-btn"
-          style={{ texDecoration: "none"}}
+          style={{ texDecoration: "none" }}
         >
           View Roles
         </Link>
         <Link
           to="/admin/dept"
           className="login-btn"
-          style={{ texDecoration: "none"}}
+          style={{ texDecoration: "none" }}
         >
           View Department
         </Link>

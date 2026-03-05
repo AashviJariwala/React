@@ -12,7 +12,7 @@ const GoogleCallback = () => {
     sessionStorage.setItem("userToken", token);
 
     if (msg === "User is new") navigate("/authentication");
-    else navigate("/");
+    else navigate("/dashboard");
   }, [location, navigate]);
 
   return <p></p>;

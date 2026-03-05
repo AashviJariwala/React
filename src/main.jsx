@@ -13,6 +13,7 @@ import Authentication from "./USER/Authentication.jsx";
 import UserDashboard from "./USER/Dashboard.jsx";
 import AdminBackgroundLayout from "./AdminBackgroundLayout.jsx";
 import UserBackgroundLayout from "./UserBackgroundLayout.jsx";
+import User from "./ADMIN/User.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -52,6 +53,14 @@ createRoot(document.getElementById("root")).render(
             </AdminBackgroundLayout>
           }
         />
+        <Route
+          path="/admin/user"
+          element={
+            <AdminBackgroundLayout>
+              <User />
+            </AdminBackgroundLayout>
+          }
+        />
         {/* User routes */}
         <Route
           path="/"
@@ -87,5 +96,5 @@ createRoot(document.getElementById("root")).render(
         />
       </Routes>
     </Router>
-  </StrictMode>
+  </StrictMode>,
 );
