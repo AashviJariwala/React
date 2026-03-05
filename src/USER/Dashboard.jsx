@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import { useState, React, useEffect } from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import axios from "axios";
 
 const locales = {
   "en-US": enUS,
@@ -17,12 +18,36 @@ const localizer = dateFnsLocalizer({
 });
 
 const Dashboard = () => {
+
   const [view, setView] = useState("month");
   const [date, setDate] = useState(new Date());
 
   const handleViewChange = (newView) => {
     setView(newView);
   };
+
+   const [error, setError] = useState("");
+
+  const token=sessionStorage.getItem("userToken");
+  function getEvents() {
+    axios
+      .get("http://localhost:3000/calendar/syncFromGoogle", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response.data.error);
+        setError(err.response.data.error + "*");
+      });
+  }
+
+  useEffect(() => {
+    getEvents();
+  }, []);
 
   return (
     <div>
@@ -66,6 +91,7 @@ const Dashboard = () => {
           views={["month", "week", "day"]}
           style={{ height: "75vh" }}
         />
+        {error && <div className="error-message">{error}</div>}
       </div>
     </div>
   );

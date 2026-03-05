@@ -31,7 +31,6 @@ const Authentication = () => {
       )
       .then((res) => {
         // console.log(res.data.data);
-        sessionStorage.setItem("token", res.data.data);
         navigate("/dashboard");
       })
       .catch((err) => {
