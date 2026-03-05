@@ -44,15 +44,19 @@ const Authentication = () => {
         <h2 className="login-title">ID Card Details</h2>
 
         <form onSubmit={handleSubmit} encType="multipart/form-data">
-          <div className="input-group">
-            <label>ID Card</label>
+          <div className="custom-file-upload">
             <input
               type="file"
+              id="photo"
               name="photo"
               onChange={handleChange}
               required
               accept="image/jpg,image/jpeg,image/png"
             />
+
+            <label htmlFor="photo" className="file-label">
+              {photo ? photo.name : "Choose ID Card"}
+            </label>
           </div>
 
           {error && <div className="error-message">{error}</div>}
