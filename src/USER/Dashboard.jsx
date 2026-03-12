@@ -45,6 +45,31 @@ const Dashboard = () => {
     "December",
   ];
   const token = sessionStorage.getItem("userToken");
+  const [error, setError] = useState("");
+  const [event, setEvent] = useState([]);
+  const [newEvent, setNewEvent] = useState({
+    title: "",
+    date: "",
+    start: "",
+    end: "",
+    description: "",
+  });
+  const [showPopup, setShowPopup] = useState(false);
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "Octobor",
+    "November",
+    "December",
+  ];
+  const token = sessionStorage.getItem("userToken");
 
   const handleViewChange = (newView) => {
     setView(newView);
@@ -96,6 +121,7 @@ const Dashboard = () => {
       })
       .then((res) => {
         setEvent(res.data.data);
+        setEvent(res.data.data);
       })
       .catch((err) => {
         console.log(err.response.data.error);
@@ -114,6 +140,39 @@ const Dashboard = () => {
           <h2 className="calendar-title">{format(date, "MMMM yyyy")}</h2>
 
           <div className="calendar-controls">
+            <select
+              value={date.getMonth()}
+              onChange={(e) => {
+                const newDate = new Date();
+                newDate.setMonth(Number(e.target.value));
+                newDate.setFullYear(date.getFullYear());
+                setDate(newDate);
+              }}
+            >
+              {months.map((m, i) => (
+                <option key={i} value={i}>
+                  {m}
+                </option>
+              ))}
+            </select>
+            <select
+              value={date.getFullYear()}
+              onChange={(e) => {
+                const newDate = new Date();
+                newDate.setFullYear(Number(e.target.value));
+                newDate.setMonth(date.getMonth());
+                setDate(newDate);
+              }}
+            >
+              {Array.from({ length: 25 }, (_, i) => {
+                const year = new Date().getFullYear() - 15 + i;
+                return (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                );
+              })}
+            </select>
             <select
               value={date.getMonth()}
               onChange={(e) => {
@@ -172,9 +231,17 @@ const Dashboard = () => {
         <button className="add-event-btn" onClick={() => setShowPopup(true)}>
           +
         </button>
+        <button className="add-event-btn" onClick={() => setShowPopup(true)}>
+          +
+        </button>
 
         <Calendar
           localizer={localizer}
+          events={event.map((e) => ({
+            ...e,
+            start: new Date(e.start),
+            end: new Date(e.end),
+          }))}
           events={event.map((e) => ({
             ...e,
             start: new Date(e.start),
@@ -189,6 +256,64 @@ const Dashboard = () => {
           views={["month", "week", "day"]}
           style={{ height: "75vh" }}
         />
+        {showPopup && (
+          <div className="event-popup-overlay">
+            <form method="post" onSubmit={handleSubmit}>
+              <div className="event-popup">
+                <button
+                  className="close-popup"
+                  onClick={() => setShowPopup(false)}
+                >
+                  ✕
+                </button>
+
+                <h3>Add Event</h3>
+                <label>Event Title</label>
+                <input
+                  type="text"
+                  name="title"
+                  value={newEvent.title}
+                  onChange={handleChange}
+                />
+
+                <label>Date</label>
+                <input
+                  type="date"
+                  name="date"
+                  value={newEvent.date}
+                  onChange={handleChange}
+                />
+
+                <label>Start Time</label>
+                <input
+                  type="time"
+                  name="start"
+                  value={newEvent.start}
+                  onChange={handleChange}
+                />
+
+                <label>End Time</label>
+
+                <input
+                  type="time"
+                  name="end"
+                  value={newEvent.end}
+                  onChange={handleChange}
+                />
+
+                <label>Description</label>
+
+                <textarea
+                  name="description"
+                  value={newEvent.description}
+                  onChange={handleChange}
+                ></textarea>
+
+                <button className="save-event-btn">Save Event</button>
+              </div>
+            </form>
+          </div>
+        )}
         {showPopup && (
           <div className="event-popup-overlay">
             <form method="post" onSubmit={handleSubmit}>
