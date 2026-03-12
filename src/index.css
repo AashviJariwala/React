@@ -67,6 +67,13 @@ body {
   font-family: 'Playfair Display', serif;
 }
 
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
 .app-background {
   min-height: 100vh;
   background-image: url("/Images/backgroundImage.jpeg");
@@ -287,13 +294,24 @@ body {
 
 /*USER*/
 
-.user-app-background {
-  min-height: 100vh;
+/* .user-app-background {
+  min-height: 115vh;
   background-image: url("/Images/backgroundImage.jpeg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
+} */
+
+.user-app-background {
+  min-height: 115vh;
+  background-image: url("/Images/backgroundImage.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+
+  display: flex;
 }
 
 /* Faded overlay */
@@ -303,12 +321,20 @@ body {
   inset: 0;
   background: rgba(255, 255, 255, 0.5); /* adjust fade here */
   z-index: 0;
+  pointer-events: none;
+
 }
+
 
 .user-app-content {
   position: relative;
   z-index: 1;
+  padding-top: 50px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
+
+
 .google-btn {
   width: 100%;
   padding: 12px;
@@ -388,6 +414,7 @@ body {
   background: #ffffff;   /* pure white */
   border-radius: 16px;
   padding: 25px;
+  margin:4px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
 }
 
@@ -412,7 +439,7 @@ body {
   margin-bottom: 20px;
 }
 
-.calendar-controls button {
+.calendar-controls button,select{
   padding: 8px 16px;
   border-radius: 20px;
   border: 1px solid #d6a77a;
@@ -421,8 +448,8 @@ body {
   transition: 0.3s ease;
 }
 
-.calendar-controls button:hover {
-  background: #f5e6d8;
+.calendar-controls button:hover,select:hover {
+  background: #f5e6d8;  
 }
 
 .active-btn {
@@ -443,4 +470,169 @@ body {
   font-size: 22px;
   font-weight: 600;
   color: #333;
+}
+
+/* Hamburger fixed on left */
+
+.hamburger-left {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  font-size: 22px;
+  border: none;
+  background: transparent;
+  padding: 4px 8px;   /* smaller width */
+  border-radius: 6px;
+  cursor: pointer;
+  z-index: 200;
+  box-shadow: none;
+}
+
+/* remove hover border */
+.hamburger-left:hover {
+  border: none;
+  background: transparent;
+}
+
+/* remove focus outline */
+.hamburger-left:focus,
+.hamburger-left:focus-visible,
+.hamburger-left:active {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+/* Sidebar */
+
+/* Layout wrapper */
+.layout-wrapper {
+  display: flex;
+}
+
+/* Sidebar */
+
+.sidebar {
+  width: 0;
+  height: 100vh;
+  background: white;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: none;
+  transition: width 0.3s ease, padding 0.3s ease;
+  position: relative;
+  z-index: 5;
+}
+
+.sidebar.open {
+  width: 250px;
+  padding: 25px;
+  box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.sidebar-link {
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+  display: block;
+  padding: 8px 0;
+
+}
+
+.sidebar-link:hover {
+  color: #d6a77a;
+  transform: translateX(4px);
+  transition: 0.2s;
+}
+
+/* Main page */
+
+.page-container {
+  flex: 1;
+  transition: margin-left 0.3s ease;
+}
+
+.page-container.shift {
+  margin-left: 20px;
+}
+
+/* + Button */
+
+.add-event-btn {
+  margin: 10px 0 15px 0;
+  padding: 8px 14px;
+  background: #d6a77a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.add-event-btn:hover {
+  background: #c48d5f;
+}
+/* Popup Overlay */
+
+.event-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 500;
+}
+
+/* Popup */
+
+.event-popup {
+  width: 500px;
+  height: 540px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  position: relative;
+}
+
+/* Close Button */
+
+.close-popup {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Inputs */
+
+.event-popup input,
+.event-popup textarea {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.save-event-btn {
+  margin-top: 20px;
+  background: #d6a77a;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
 }
