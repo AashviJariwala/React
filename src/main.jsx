@@ -94,6 +94,14 @@ createRoot(document.getElementById("root")).render(
             </UserBackgroundLayout>
           }
         />
+        <Route
+          path="/updateCard"
+          element={
+            <UserBackgroundLayout>
+              <Authentication />
+            </UserBackgroundLayout>
+          }
+        />
       </Routes>
     </Router>
   </StrictMode>,

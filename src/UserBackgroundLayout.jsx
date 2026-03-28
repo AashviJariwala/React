@@ -1,13 +1,20 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const UserBackgroundLayout = ({ children }) => {
   const [open, setOpen] = useState(false);
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const hideSidebarRoutes = ["/", "/authentication"];
-
   const hideSidebar = hideSidebarRoutes.includes(location.pathname);
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("userToken");
+    setShowLogoutPopup(false)
+    navigate("/");
+  };
 
   return (
     <div className="user-app-background">
@@ -24,12 +31,19 @@ const UserBackgroundLayout = ({ children }) => {
             <Link to="/dashboard" className="sidebar-link">
               Dashboard
             </Link>
-            <Link to="/authentication" className="sidebar-link">
-              Authentication
+
+            <Link to="/updateCard" className="sidebar-link">
+              Update ID Card
             </Link>
-            <Link to="/" className="sidebar-link">
+
+            {/* Logout button */}
+            <div
+              className="sidebar-link"
+              onClick={() => setShowLogoutPopup(true)}
+              style={{ cursor: "pointer" }}
+            >
               Logout
-            </Link>
+            </div>
           </nav>
         </div>
       )}
@@ -38,6 +52,20 @@ const UserBackgroundLayout = ({ children }) => {
       <div className={`page-container ${open ? "shift" : ""}`}>
         <div className="user-app-content">{children}</div>
       </div>
+
+      {/* Logout Popup */}
+      {showLogoutPopup && (
+        <div className="overlay">
+          <div className="popup">
+            <h3>Are you sure you want to logout?</h3>
+
+            <div className="buttons">
+              <button onClick={handleLogout}>Logout</button>
+              <button onClick={() => setShowLogoutPopup(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -183,7 +183,6 @@ const Dashboard = () => {
                 );
               })}
             </select>
-
             <button
               className={view === "month" ? "active-btn" : ""}
               onClick={() => handleViewChange("month")}
