@@ -636,3 +636,107 @@ textarea {
   border-radius: 8px;
   cursor: pointer;
 }
+
+/*Event Delete Edit Popup*/
+
+/* Overlay */
+
+.event-view-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 400;
+}
+
+/* Popup */
+
+.event-view-popup {
+  width: 380px;
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  animation: popupFade 0.25s ease;
+}
+
+/* Header */
+
+.event-view-header {
+  display: flex;
+  justify-content: space-between;  /* pushes icons to right */
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.event-view-body h3 {
+  /* margin: 0; */
+  color: #333;
+}
+
+/* Icons */
+.event-actions {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;   /* pushes icons to the right */
+}
+
+.icon{
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon:hover {
+  transform: scale(1.2);
+}
+
+.icon.edit:hover {
+  color: #d6a77a;
+}
+
+.icon.delete:hover {
+  color: #e74c3c;
+}
+
+.icon.cancel:hover {
+  color: #555;
+}
+
+/* Body */
+
+.event-view-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  
+}
+
+.event-row p {
+  margin-top: 5px;
+  color: 333;
+}
+
+/* Animation */
+
+@keyframes popupFade {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

@@ -4,14 +4,13 @@ import { useNavigate } from "react-router-dom";
 
 const Authentication = () => {
   const navigate = useNavigate();
-    const token = sessionStorage.getItem("userToken");
+  const token = sessionStorage.getItem("userToken");
 
   const [error, setError] = useState("");
   const [photo, setPhoto] = useState(null);
 
-  const handleChange = (e) => {    
+  const handleChange = (e) => {
     setPhoto(e.target.files[0] ? e.target.files[0] : null);
-
   };
 
   const handleSubmit = (e) => {
@@ -27,9 +26,9 @@ const Authentication = () => {
             Authorization: "Bearer " + token,
             "Content-Type": "multipart/form-data",
           },
-        },
+        }
       )
-      .then((res) => {
+      .then(() => {
         // console.log(res.data.data);
         navigate("/dashboard");
       })
