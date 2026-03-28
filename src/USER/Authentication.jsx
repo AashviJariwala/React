@@ -29,7 +29,7 @@ const Authentication = () => {
           },
         },
       )
-      .then((res) => {
+      .then(() => {
         // console.log(res.data.data);
         navigate("/dashboard");
       })
