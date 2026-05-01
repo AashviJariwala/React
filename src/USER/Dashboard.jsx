@@ -129,7 +129,7 @@ const Dashboard = () => {
           },
         }
       )
-      .then((res) => {
+      .then(() => {
         setDetailPopup(false);
         getEvents();
       })
