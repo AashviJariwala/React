@@ -14,6 +14,10 @@ import UserDashboard from "./USER/Dashboard.jsx";
 import AdminBackgroundLayout from "./AdminBackgroundLayout.jsx";
 import UserBackgroundLayout from "./UserBackgroundLayout.jsx";
 import User from "./ADMIN/User.jsx";
+import Permission from "./ADMIN/Permission.jsx";
+import Search from "./USER/Search.jsx";
+import UpdateUser from "./USER/UpdateUser.jsx";
+import UserProfile from "./USER/UserProfile.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -61,6 +65,15 @@ createRoot(document.getElementById("root")).render(
             </AdminBackgroundLayout>
           }
         />
+
+        <Route
+          path="/admin/permission"
+          element={
+            <AdminBackgroundLayout>
+              <Permission />
+            </AdminBackgroundLayout>
+          }
+        />
         {/* User routes */}
         <Route
           path="/"
@@ -102,7 +115,34 @@ createRoot(document.getElementById("root")).render(
             </UserBackgroundLayout>
           }
         />
+
+        <Route
+          path="/search"
+          element={
+            <UserBackgroundLayout>
+              <Search />
+            </UserBackgroundLayout>
+          }
+        />
+
+        <Route
+          path="/editVisibility"
+          element={
+            <UserBackgroundLayout>
+              <UpdateUser />
+            </UserBackgroundLayout>
+          }
+        />
+
+        <Route
+          path="/userProfile"
+          element={
+            <UserBackgroundLayout>
+              <UserProfile />
+            </UserBackgroundLayout>
+          }
+        />
       </Routes>
     </Router>
-  </StrictMode>,
+  </StrictMode>
 );

@@ -4,6 +4,7 @@ import { format, parse, startOfWeek, getDay } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import axios from "axios";
+import Switch from "react-switch";
 
 const locales = {
   "en-US": enUS,
@@ -31,9 +32,18 @@ const Dashboard = () => {
   });
   const [showPopup, setShowPopup] = useState(false);
   const [detailPopup, setDetailPopup] = useState(false);
+  const [visibility, setVisibility] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [editMode, setEditMode] = useState(false);
   const [day, setDay] = useState("");
   const [edate, setEdate] = useState("");
+  const [editEvent, setEditEvent] = useState({
+    title: "",
+    date: "",
+    start: "",
+    end: "",
+    description: "",
+  });
 
   const months = [
     "January",
@@ -56,39 +66,106 @@ const Dashboard = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setNewEvent((values) => ({
-      ...values,
-      [name]: value,
-    }));
+    if (!editMode) {
+      const { name, value } = e.target;
+      setNewEvent((values) => ({
+        ...values,
+        [name]: value,
+      }));
+    } else {
+      const { name, value } = e.target;
+      setEditEvent((values) => ({
+        ...values,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!editMode) {
+      axios
+        .post(
+          "http://localhost:3000/calendar/createEvent/",
+          {
+            title: newEvent["title"],
+            date: newEvent["date"],
+            start: newEvent["start"],
+            end: newEvent["end"],
+            description: newEvent["description"],
+            visibility: visibility,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res.data.data);
+          setShowPopup(false);
+          getEvents();
+        })
+        .catch((err) => {
+          console.log(err.response.data.error);
+          setError(err.response.data.error + "*");
+        });
+    } else {
+      axios
+        .put(
+          "http://localhost:3000/calendar/editEvent/" +
+            selectedEvent._id +
+            "/" +
+            selectedEvent.googleEventID,
+          {
+            title: editEvent["title"],
+            date: editEvent["date"],
+            start: editEvent["start"],
+            end: editEvent["end"],
+            description: editEvent["description"],
+            visibility: visibility,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res.data.data);
+          setEditMode(false);
+          setShowPopup(false);
+          getEvents();
+        })
+        .catch((err) => {
+          console.log(err.response.data.error);
+          setError(err.response.data.error + "*");
+        });
+    }
+  };
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
     axios
-      .post(
-        "http://localhost:3000/calendar/createEvent/",
-        {
-          title: newEvent["title"],
-          date: newEvent["date"],
-          start: newEvent["start"],
-          end: newEvent["end"],
-          description: newEvent["description"],
-        },
+      .put(
+        "http://localhost:3000/calendar/editEventVisibility/" +
+          selectedEvent._id +
+          "/" +
+          visibility,
+        {},
         {
           headers: {
             Authorization: "Bearer " + token,
           },
         }
       )
-      .then((res) => {
-        console.log(res.data.data);
-        setShowPopup(false);
-        getEvents();
+      .then(() => {
+        setDetailPopup(false);
+        setError("");
       })
       .catch((err) => {
-        console.log(err.response.data.error);
-        setError(err.response.data.error + "*");
+        console.log(err.response?.data?.error);
+        setError(err.response?.data?.error + "*");
       });
   };
 
@@ -115,6 +192,15 @@ const Dashboard = () => {
     setEdate(date);
     setSelectedEvent(e);
     setDetailPopup(true);
+    axios
+      .get("http://localhost:3000/calendar/getVisibility/" + e._id, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((res) => {
+        setVisibility(res.data.data);
+      });
   };
 
   const handleDeleteSubmit = (e) => {
@@ -139,6 +225,23 @@ const Dashboard = () => {
       });
   };
 
+  const handleEditSubmit = (e) => {
+    e.preventDefault();
+    const formattedDate = format(selectedEvent.start, "yyyy-MM-dd");
+    const stime1 = format(selectedEvent.start, "HH:mm");
+    const etime1 = format(selectedEvent.end, "HH:mm");
+    setEditEvent({
+      title: selectedEvent.title,
+      date: formattedDate,
+      start: stime1,
+      end: etime1,
+      description: selectedEvent.description,
+    });
+    setDetailPopup(false);
+    setEditMode(true);
+    setShowPopup(true);
+  };
+
   useEffect(() => {
     getEvents();
   }, []);
@@ -154,6 +257,7 @@ const Dashboard = () => {
               value={date.getMonth()}
               onChange={(e) => {
                 const newDate = new Date();
+                newDate.setDate(1);
                 newDate.setMonth(Number(e.target.value));
                 newDate.setFullYear(date.getFullYear());
                 setDate(newDate);
@@ -169,6 +273,7 @@ const Dashboard = () => {
               value={date.getFullYear()}
               onChange={(e) => {
                 const newDate = new Date();
+                newDate.setDate(1);
                 newDate.setFullYear(Number(e.target.value));
                 newDate.setMonth(date.getMonth());
                 setDate(newDate);
@@ -229,58 +334,108 @@ const Dashboard = () => {
         {showPopup && (
           <div className="event-popup-overlay">
             <form method="post" onSubmit={handleSubmit}>
-              <div className="event-popup">
-                <button
-                  className="close-popup"
-                  onClick={() => setShowPopup(false)}
-                >
-                  ✕
-                </button>
+              {!editMode ? (
+                <div className="event-popup">
+                  <button
+                    type="button"
+                    className="close-popup"
+                    onClick={() => setShowPopup(false)}
+                  >
+                    ✕
+                  </button>
 
-                <h3>Add Event</h3>
-                <label>Event Title</label>
-                <input
-                  type="text"
-                  name="title"
-                  value={newEvent.title}
-                  onChange={handleChange}
-                />
+                  <h3>Add Event</h3>
+                  <label>Event Title</label>
+                  <input
+                    type="text"
+                    name="title"
+                    value={newEvent.title}
+                    onChange={handleChange}
+                  />
 
-                <label>Date</label>
-                <input
-                  type="date"
-                  name="date"
-                  value={newEvent.date}
-                  onChange={handleChange}
-                />
+                  <label>Date</label>
+                  <input
+                    type="date"
+                    name="date"
+                    value={newEvent.date}
+                    onChange={handleChange}
+                  />
 
-                <label>Start Time</label>
-                <input
-                  type="time"
-                  name="start"
-                  value={newEvent.start}
-                  onChange={handleChange}
-                />
+                  <label>Start Time</label>
+                  <input
+                    type="time"
+                    name="start"
+                    value={newEvent.start}
+                    onChange={handleChange}
+                  />
 
-                <label>End Time</label>
+                  <label>End Time</label>
+                  <input
+                    type="time"
+                    name="end"
+                    value={newEvent.end}
+                    onChange={handleChange}
+                  />
 
-                <input
-                  type="time"
-                  name="end"
-                  value={newEvent.end}
-                  onChange={handleChange}
-                />
+                  <label>Description</label>
+                  <textarea
+                    name="description"
+                    value={newEvent.description}
+                    onChange={handleChange}
+                  ></textarea>
 
-                <label>Description</label>
-
-                <textarea
-                  name="description"
-                  value={newEvent.description}
-                  onChange={handleChange}
-                ></textarea>
-
-                <button className="save-event-btn">Save Event</button>
-              </div>
+                  <button className="save-event-btn">Save Event</button>
+                </div>
+              ) : (
+                <div className="event-popup">
+                  <button
+                    type="button"
+                    className="close-popup"
+                    onClick={() => {
+                      setEditMode(false);
+                      setShowPopup(false);
+                    }}
+                  >
+                    ✕
+                  </button>
+                  <h3>Edit Event</h3>
+                  <label>Event Title</label>
+                  <input
+                    type="text"
+                    name="title"
+                    value={editEvent.title}
+                    onChange={handleChange}
+                  />
+                  <label>Date</label>
+                  <input
+                    type="date"
+                    name="date"
+                    value={editEvent.date}
+                    onChange={handleChange}
+                  />
+                  <label>Start Time</label>
+                  <input
+                    type="time"
+                    name="start"
+                    value={editEvent.start}
+                    onChange={handleChange}
+                  />
+                  <label>End Time</label>
+                  <input
+                    type="time"
+                    name="end"
+                    value={editEvent.end}
+                    onChange={handleChange}
+                  />
+                  <label>Description</label>
+                  <textarea
+                    name="description"
+                    value={editEvent.description}
+                    onChange={handleChange}
+                  ></textarea>
+                  <button className="save-event-btn">Save Event</button>{" "}
+                </div>
+              )}
             </form>
           </div>
         )}
@@ -291,7 +446,11 @@ const Dashboard = () => {
               <form method="post">
                 <div className="event-view-header">
                   <div className="event-actions">
-                    <button className="icon edit" type="button">
+                    <button
+                      className="icon edit"
+                      type="button"
+                      onClick={handleEditSubmit}
+                    >
                       ✏️
                     </button>
                     <button
@@ -327,6 +486,21 @@ const Dashboard = () => {
                         <p>☰ &nbsp; {selectedEvent.description}</p>
                       )}
                     </p>
+                  </div>
+
+                  <div className="event-row">
+                    <button className="icon edit" type="button">
+                      <Switch
+                        onChange={() => setVisibility(!visibility)}
+                        checked={visibility}
+                      />
+                    </button>
+                    <input
+                      type="submit"
+                      onClick={handleUpdate}
+                      value="Ok"
+                      className="ok-btn"
+                    />
                   </div>
                 </div>
               </form>
