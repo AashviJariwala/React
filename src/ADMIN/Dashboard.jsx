@@ -26,6 +26,14 @@ const Dashboard = () => {
         >
           View Department
         </Link>
+
+        {/* <Link
+          to="/admin/permission"
+          className="login-btn"
+          style={{ texDecoration: "none" }}
+        >
+          View Permission */}
+        {/* </Link> */}
       </div>
     </>
   );

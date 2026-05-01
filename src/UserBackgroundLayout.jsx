@@ -12,18 +12,32 @@ const UserBackgroundLayout = ({ children }) => {
 
   const handleLogout = () => {
     sessionStorage.removeItem("userToken");
-    setShowLogoutPopup(false)
+    setShowLogoutPopup(false);
     navigate("/");
   };
 
   return (
     <div className="user-app-background">
       {!hideSidebar && (
-        <button className="hamburger-left" onClick={() => setOpen(!open)}>
-          ☰
-        </button>
-      )}
+        <div className="top-header">
+          {/* LEFT SIDE */}
+          <div className="header-left">
+            <button className="hamburger-inline" onClick={() => setOpen(!open)}>
+              ☰
+            </button>
 
+            <div className="header-title">
+              <span className="header-icon">📚</span>
+              <span>Classroom</span>
+            </div>
+          </div>
+
+          {/* RIGHT SIDE */}
+          {/* <div className="header-right">
+            <span className="header-icon-btn">+</span>
+          </div> */}
+        </div>
+      )}
       {/* Sidebar */}
       {!hideSidebar && (
         <div className={`sidebar ${open ? "open" : ""}`}>
@@ -32,8 +46,16 @@ const UserBackgroundLayout = ({ children }) => {
               Dashboard
             </Link>
 
+            <Link to="/search" className="sidebar-link">
+              People
+            </Link>
+
             <Link to="/updateCard" className="sidebar-link">
               Update ID Card
+            </Link>
+
+            <Link to="/editVisibility" className="sidebar-link">
+              Update Visibility
             </Link>
 
             {/* Logout button */}
