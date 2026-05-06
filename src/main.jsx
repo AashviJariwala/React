@@ -18,6 +18,7 @@ import Permission from "./ADMIN/Permission.jsx";
 import Search from "./USER/Search.jsx";
 import UpdateUser from "./USER/UpdateUser.jsx";
 import UserProfile from "./USER/UserProfile.jsx";
+import Meeting from "./USER/Meeting.jsx";
 import SearchByTimeSlot from "./USER/SearchByTimeSlot.jsx";
 
 createRoot(document.getElementById("root")).render(
@@ -149,6 +150,15 @@ createRoot(document.getElementById("root")).render(
           element={
             <UserBackgroundLayout>
               <UserProfile />
+            </UserBackgroundLayout>
+          }
+        />
+
+        <Route
+          path="/meeting"
+          element={
+            <UserBackgroundLayout>
+              <Meeting />
             </UserBackgroundLayout>
           }
         />

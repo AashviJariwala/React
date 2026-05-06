@@ -49,6 +49,11 @@ const UserBackgroundLayout = ({ children }) => {
             <Link to="/search" className="sidebar-link">
               People
             </Link>
+            
+            <Link to="/meeting" className="sidebar-link">
+              Meeting
+            </Link>
+
 
             <Link to="/updateCard" className="sidebar-link">
               Update ID Card
