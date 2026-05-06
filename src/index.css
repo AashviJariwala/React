@@ -1077,3 +1077,49 @@ select:hover {
   justify-content: center;
   margin-top: 15px;
 }
+
+/* Search by timeslot */
+
+/* Wrapper */
+.slots-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Card */
+.slots-card {
+  max-width: 600px;
+  margin: auto;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+/* Title */
+.slots-title {
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Grid */
+.slots-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* SLOT CHIP (non-clickable) */
+.slot-chip {
+  padding: 8px 14px;
+  background-color: #e3f2f5;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #333;
+  cursor: default; /* disables pointer */
+  user-select: none; /* prevents text selection */
+}

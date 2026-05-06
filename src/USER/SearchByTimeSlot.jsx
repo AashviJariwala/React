@@ -1,79 +1,106 @@
 import { useEffect, useState } from "react";
-import { Calendar, dateFnsLocalizer } from "react-big-calendar";
-import { format, parse, startOfWeek, getDay } from "date-fns";
-import enUS from "date-fns/locale/en-US";
-import "react-big-calendar/lib/css/react-big-calendar.css";
 import axios from "axios";
 
-const locales = {
-  "en-US": enUS,
-};
-
-const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-  locales,
-});
-
 const SearchByTimeSlot = () => {
-  const [date, setDate] = useState(new Date());
-  const [events, setEvents] = useState([]);
   const [error, setError] = useState("");
-  const [result, setResult] = useState([]);
-
+  const [result, setResult] = useState([]); // employees
+  const [participantID, setParticipantID] = useState([]);
+  const [freeSlots, setFreeSlots] = useState([]);
 
   const token = sessionStorage.getItem("userToken");
 
+  // get all users
   function getData() {
     axios
       .get("http://localhost:3000/search/showAllEmployee", {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
+        headers: { Authorization: "Bearer " + token },
       })
       .then((res) => {
-        console.log(res.data.data);
         setResult(res.data.data);
       })
       .catch((err) => {
-        console.log(err.response.data.error);
-        setError(err.response.data.error + "*");
+        setError(err.response?.data?.error || "Error");
       });
   }
 
-  const handleSearch=(e)=>{
-    console.log(e.target.value);
-    
-     axios
-       .get("http://localhost:3000/search/searchByTimeslot/"+e.target.value, {
-         headers: {
-           Authorization: "Bearer " + token,
-         },
-       })
-       .then((res) => {
-         setEvents(res.data.data);
-       })
-       .catch((err) => {
-         console.log(err.response?.data?.error);
-       });
-  }
+  // checkbox select
+  const handleParticipantChange = (e) => {
+    const value = e.target.value;
 
-  // Fetch events only
+    if (participantID.includes(value)) {
+      setParticipantID(participantID.filter((id) => id !== value));
+    } else {
+      setParticipantID([...participantID, value]);
+    }
+  };
+
+  // search free slots
+  const handleSearch = () => {
+    axios
+      .post(
+        "http://localhost:3000/search/searchByTimeslot",
+        { uid: participantID },
+        {
+          headers: { Authorization: "Bearer " + token },
+        },
+      )
+      .then((res) => {
+        setFreeSlots(res.data.data); // <-- important
+      })
+      .catch((err) => {
+        console.log(err.response?.data?.error);
+      });
+  };
+
   useEffect(() => {
-   getData()
+    getData();
   }, []);
 
   return (
-    <div className="calendar-card">
-      <select onChange={handleSearch}>
-        <option value={0}>--SELECT--</option>
-        {result.map((r,index)=>(
-            <option value={r._id} key={index}>{r.name}</option>
-        ))}
-      </select>
-    </div>
+    <>
+      <div className="user-section">
+        {/* USER LIST */}
+        <div className="user-list-container">
+          {result.map((r, index) => (
+            <div key={index} className="user-row">
+              <input
+                type="checkbox"
+                value={r._id}
+                onChange={handleParticipantChange}
+              />
+              <div className="avatar">👤</div>
+              <p className="user-name">{r.name}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* BUTTON */}
+        <div className="button-container">
+          <button className="ok-btn" onClick={handleSearch}>
+            Find Free Slots
+          </button>
+        </div>
+
+        {/* FREE SLOTS DISPLAY */}
+        <div className="slots-wrapper">
+          <div className="slots-card">
+            <h3 className="slots-title">Available Time Slots</h3>
+
+            {freeSlots.length === 0 ? (
+              <p className="no-slots">No common free slots found</p>
+            ) : (
+              <div className="slots-grid">
+                {freeSlots.map((slot, index) => (
+                  <div key={index} className="slot-chip">
+                    {slot}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
