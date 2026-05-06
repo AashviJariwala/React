@@ -70,6 +70,7 @@ body {
 button,
 input,
 select,
+option,
 textarea {
   font-family: inherit;
 }
@@ -891,7 +892,7 @@ textarea {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
   margin-bottom: 20px;
 }
 
@@ -1080,4 +1081,15 @@ textarea {
 
 .ok-btn:hover {
   background: #b88755;
+}
+/*meeting button*/
+.user-section {
+  max-width: 600px;
+  margin: auto;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
 }
