@@ -24,6 +24,7 @@ const UserProfile = () => {
   const [error, setError] = useState("");
   const [event, setEvent] = useState([]);
   const [visibility, setVisibility] = useState(false);
+  const [name, setName] = useState("");
   // const [day, setDay] = useState("");
   // const [edate, setEdate] = useState("");
 
@@ -58,6 +59,7 @@ const UserProfile = () => {
         },
       })
       .then((res) => {
+        setName(res.data.data.name);
         setEvent(res.data.data.events);
         setVisibility(res.data.data.visibility);
       })
@@ -72,10 +74,9 @@ const UserProfile = () => {
   }, []);
 
   const showEvents = () => {
-    
     return event.map((e) => ({
       ...e,
-      title: (e.visibility==1)? e.title:"Busy" ,
+      title: e.visibility == 1 ? e.title : "Busy",
       start: new Date(e.start),
       end: new Date(e.end),
     }));
@@ -85,7 +86,9 @@ const UserProfile = () => {
     <div>
       <div className="calendar-card">
         <div className="calendar-header">
-          <h2 className="calendar-title">{format(date, "MMMM yyyy")}</h2>
+          <h2 className="calendar-title">
+            {format(date, "MMMM yyyy")} | {name}'s Calendar
+          </h2>
 
           <div className="calendar-controls">
             <select

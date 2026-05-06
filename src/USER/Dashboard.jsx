@@ -99,7 +99,7 @@ const Dashboard = () => {
             headers: {
               Authorization: "Bearer " + token,
             },
-          }
+          },
         )
         .then((res) => {
           console.log(res.data.data);
@@ -129,7 +129,7 @@ const Dashboard = () => {
             headers: {
               Authorization: "Bearer " + token,
             },
-          }
+          },
         )
         .then((res) => {
           console.log(res.data.data);
@@ -157,7 +157,7 @@ const Dashboard = () => {
           headers: {
             Authorization: "Bearer " + token,
           },
-        }
+        },
       )
       .then(() => {
         setDetailPopup(false);
@@ -166,6 +166,27 @@ const Dashboard = () => {
       .catch((err) => {
         console.log(err.response?.data?.error);
         setError(err.response?.data?.error + "*");
+      });
+  };
+
+  const handleInstantMeeting = (e) => {
+    e.preventDefault();
+    axios
+      .post(
+        "http://localhost:3000/meeting/creatInstantMeetingEvent/",
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        },
+      )
+      .then((res) => {
+        window.location.href = res.data.meetLink;
+      })
+      .catch((err) => {
+        console.log(err.response.data.error);
+        setError(err.response.data.error + "*");
       });
   };
 
@@ -213,7 +234,7 @@ const Dashboard = () => {
           headers: {
             Authorization: "Bearer " + token,
           },
-        }
+        },
       )
       .then(() => {
         setDetailPopup(false);
@@ -310,9 +331,17 @@ const Dashboard = () => {
             </button>
           </div>
         </div>
-        <button className="add-event-btn" onClick={() => setShowPopup(true)}>
-          +
-        </button>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button className="add-event-btn" onClick={() => setShowPopup(true)}>
+            +
+          </button>
+          <button
+            className="add-event-btn"
+            onClick={handleInstantMeeting}
+          >
+            Start Instant Meeting
+          </button>
+        </div>
 
         <Calendar
           localizer={localizer}

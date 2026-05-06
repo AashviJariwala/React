@@ -58,6 +58,10 @@ const UserBackgroundLayout = ({ children }) => {
               Update Visibility
             </Link>
 
+            <Link to="/searchByTimeslot" className="sidebar-link">
+              Search By Timeslot
+            </Link>
+
             {/* Logout button */}
             <div
               className="sidebar-link"

@@ -18,6 +18,7 @@ import Permission from "./ADMIN/Permission.jsx";
 import Search from "./USER/Search.jsx";
 import UpdateUser from "./USER/UpdateUser.jsx";
 import UserProfile from "./USER/UserProfile.jsx";
+import SearchByTimeSlot from "./USER/SearchByTimeSlot.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -135,6 +136,15 @@ createRoot(document.getElementById("root")).render(
         />
 
         <Route
+          path="/searchByTimeslot"
+          element={
+            <UserBackgroundLayout>
+              <SearchByTimeSlot />
+            </UserBackgroundLayout>
+          }
+        />
+
+        <Route
           path="/userProfile"
           element={
             <UserBackgroundLayout>
@@ -144,5 +154,5 @@ createRoot(document.getElementById("root")).render(
         />
       </Routes>
     </Router>
-  </StrictMode>
+  </StrictMode>,
 );
