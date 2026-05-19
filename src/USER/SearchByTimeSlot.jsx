@@ -7,9 +7,13 @@ const SearchByTimeSlot = () => {
   const [result, setResult] = useState([]); // employees
   const [participantID, setParticipantID] = useState([]);
   const [freeSlots, setFreeSlots] = useState([]);
+  const [result, setResult] = useState([]); // employees
+  const [participantID, setParticipantID] = useState([]);
+  const [freeSlots, setFreeSlots] = useState([]);
 
   const token = sessionStorage.getItem("userToken");
 
+  // get all users
   // get all users
   function getData() {
     axios
@@ -20,6 +24,7 @@ const SearchByTimeSlot = () => {
         setResult(res.data.data);
       })
       .catch((err) => {
+        setError(err.response?.data?.error || "Error");
         setError(err.response?.data?.error || "Error");
       });
   }
@@ -55,9 +60,54 @@ const SearchByTimeSlot = () => {
 
   useEffect(() => {
     getData();
+    getData();
   }, []);
 
   return (
+    <>
+      <div className="user-section">
+        {/* USER LIST */}
+        <div className="user-list-container">
+          {result.map((r, index) => (
+            <div key={index} className="user-row">
+              <input
+                type="checkbox"
+                value={r._id}
+                onChange={handleParticipantChange}
+              />
+              <div className="avatar">👤</div>
+              <p className="user-name">{r.name}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* BUTTON */}
+        <div className="button-container">
+          <button className="ok-btn" onClick={handleSearch}>
+            Find Free Slots
+          </button>
+        </div>
+
+        {/* FREE SLOTS DISPLAY */}
+        <div className="slots-wrapper">
+          <div className="slots-card">
+            <h3 className="slots-title">Available Time Slots</h3>
+
+            {freeSlots.length === 0 ? (
+              <p className="no-slots">No common free slots found</p>
+            ) : (
+              <div className="slots-grid">
+                {freeSlots.map((slot, index) => (
+                  <div key={index} className="slot-chip">
+                    {slot}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
     <>
       <div className="user-section">
         {/* USER LIST */}
