@@ -5,6 +5,7 @@ import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import {API_URL} from "../config"
 
 const locales = {
   "en-US": enUS,
@@ -53,7 +54,7 @@ const UserProfile = () => {
 
   function getEvents() {
     axios
-      .get("http://localhost:3000/search/userProfile/" + data.id, {
+      .get(API_URL+"/search/userProfile/" + data.id, {
         headers: {
           Authorization: "Bearer " + token,
         },

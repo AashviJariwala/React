@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import {API_URL} from "../config"
 
 const User = () => {
   const [result, setResult] = useState([]);
@@ -9,7 +10,7 @@ const User = () => {
 
   function getData() {
     axios
-      .get("http://localhost:3000/admin/displayUser", {
+      .get(API_URL+"/admin/displayUser", {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -57,7 +58,7 @@ const User = () => {
                    <td>{user.email}</td>
                    <td>
                      <img
-                       src={`http://localhost:3000/public/${user.idCard}`}
+                       src={`${API_URL}/public/${user.idCard}`}
                        alt="ID Card"
                      />
                    </td>

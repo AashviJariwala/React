@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import {API_URL} from "../config"
 
 const Department = () => {
   const [name, setName] = useState("");
@@ -16,7 +17,7 @@ const Department = () => {
 
   function getData() {
     axios
-      .get("http://localhost:3000/admin/displayDept", {
+      .get(API_URL + "/admin/displayDept", {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -65,7 +66,7 @@ const Department = () => {
 
   const handleCheckboxChange = (id) => {
     setselectedDepts((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
   };
 
@@ -87,7 +88,7 @@ const Department = () => {
     // }
 
     axios
-      .delete("http://localhost:3000/admin/deleteDept/" + selectedDepts, {
+      .delete(API_URL + "/admin/deleteDept/" + selectedDepts, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -113,7 +114,7 @@ const Department = () => {
 
     axios
       .put(
-        "http://localhost:3000/admin/editDept/" + selectedEditDepts,
+        API_URL + "/admin/editDept/" + selectedEditDepts,
         {
           name,
         },
@@ -121,7 +122,7 @@ const Department = () => {
           headers: {
             Authorization: "Bearer " + token,
           },
-        },
+        }
       )
       .then((res) => {
         console.log(res.data.msg);
@@ -143,7 +144,7 @@ const Department = () => {
     if (!editMode) {
       axios
         .post(
-          "http://localhost:3000/admin/insertDept",
+          API_URL + "/admin/insertDept",
           {
             name,
           },
@@ -151,7 +152,7 @@ const Department = () => {
             headers: {
               Authorization: "Bearer " + token,
             },
-          },
+          }
         )
         .then((res) => {
           console.log(res.data.msg);

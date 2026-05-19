@@ -2,6 +2,7 @@ import React, { useState,useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Switch from "react-switch";
+import {API_URL} from "../config"
 
 const UpdateUser = () => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ const UpdateUser = () => {
 
 
   useEffect(()=>{
-    axios.get("http://localhost:3000/user/getVisibility",  {
+    axios.get(API_URL+"/user/getVisibility",  {
       headers: {
         Authorization: "Bearer " + token,
       },
@@ -26,7 +27,7 @@ const UpdateUser = () => {
 
     axios
       .put(
-        "http://localhost:3000/user/editVisibility/" + visibility,
+        API_URL+"/user/editVisibility/" + visibility,
         {},
         {
           headers: {

@@ -20,6 +20,7 @@ import UpdateUser from "./USER/UpdateUser.jsx";
 import UserProfile from "./USER/UserProfile.jsx";
 import Meeting from "./USER/Meeting.jsx";
 import SearchByTimeSlot from "./USER/SearchByTimeSlot.jsx";
+import CollaborativeEvents from "./USER/CollaborativeEvents.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -159,6 +160,14 @@ createRoot(document.getElementById("root")).render(
           element={
             <UserBackgroundLayout>
               <Meeting />
+            </UserBackgroundLayout>
+          }
+        />
+          <Route
+          path="/collab"
+          element={
+            <UserBackgroundLayout>
+              <CollaborativeEvents />
             </UserBackgroundLayout>
           }
         />

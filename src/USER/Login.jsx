@@ -1,8 +1,9 @@
 import React from "react";
+import {API_URL} from "../config"
 
 const Login = () => {
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:3000/login/google";
+    window.location.href = API_URL+"/login/google";
   };
 
   return (

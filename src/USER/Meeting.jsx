@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../config";
 
 const Meeting = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const Meeting = () => {
 
   function getData() {
     axios
-      .get("http://localhost:3000/search/showAllEmployee", {
+      .get(API_URL + "/search/showAllEmployee", {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -32,7 +33,7 @@ const Meeting = () => {
 
   function getMeetingData() {
     axios
-      .get("http://localhost:3000/meeting/getAllMeetings", {
+      .get(API_URL + "/meeting/getAllMeetings", {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -50,7 +51,7 @@ const Meeting = () => {
   const handleNotifications = () => {
     axios
       .post(
-        "http://localhost:3000/meeting/sendNoti",
+        API_URL + "/meeting/sendNoti",
         {
           meetID: meetID,
           participantID: participantID,
@@ -62,7 +63,8 @@ const Meeting = () => {
         }
       )
       .then((res) => {
-        console.log();
+        setMeetID("");
+        setParticipantID([]);
       });
   };
   useEffect(() => {
@@ -72,7 +74,7 @@ const Meeting = () => {
     }
     const delay = setTimeout(() => {
       axios
-        .get("http://localhost:3000/search/searchProfile/" + query, {
+        .get(API_URL + "/search/searchProfile/" + query, {
           headers: {
             Authorization: "Bearer " + token,
           },
@@ -95,7 +97,12 @@ const Meeting = () => {
   };
 
   const handleParticipantChange = (e) => {
-    setParticipantID([...participantID, e.target.value ]);
+    const value = e.target.value;
+    if (participantID.includes(value)) {
+      setParticipantID(participantID.filter((id) => id !== value));
+    } else {
+      setParticipantID([...participantID, value]);
+    }
   };
   return (
     <>
@@ -147,7 +154,7 @@ const Meeting = () => {
               <input
                 type="checkbox"
                 value={r._id}
-                onClick={handleParticipantChange}
+                onChange={handleParticipantChange}
               />
               <div className="avatar">
                 <span>👤</span>

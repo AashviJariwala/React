@@ -5,6 +5,7 @@ import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import axios from "axios";
 import Switch from "react-switch";
+import {API_URL} from "../config"
 
 const locales = {
   "en-US": enUS,
@@ -37,6 +38,7 @@ const Dashboard = () => {
   const [editMode, setEditMode] = useState(false);
   const [day, setDay] = useState("");
   const [edate, setEdate] = useState("");
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const [editEvent, setEditEvent] = useState({
     title: "",
     date: "",
@@ -86,7 +88,7 @@ const Dashboard = () => {
     if (!editMode) {
       axios
         .post(
-          "http://localhost:3000/calendar/createEvent/",
+          API_URL+"/calendar/createEvent/",
           {
             title: newEvent["title"],
             date: newEvent["date"],
@@ -99,7 +101,7 @@ const Dashboard = () => {
             headers: {
               Authorization: "Bearer " + token,
             },
-          },
+          }
         )
         .then((res) => {
           console.log(res.data.data);
@@ -113,7 +115,7 @@ const Dashboard = () => {
     } else {
       axios
         .put(
-          "http://localhost:3000/calendar/editEvent/" +
+          API_URL+"/calendar/editEvent/" +
             selectedEvent._id +
             "/" +
             selectedEvent.googleEventID,
@@ -129,7 +131,7 @@ const Dashboard = () => {
             headers: {
               Authorization: "Bearer " + token,
             },
-          },
+          }
         )
         .then((res) => {
           console.log(res.data.data);
@@ -148,7 +150,7 @@ const Dashboard = () => {
     e.preventDefault();
     axios
       .put(
-        "http://localhost:3000/calendar/editEventVisibility/" +
+        API_URL+"/calendar/editEventVisibility/" +
           selectedEvent._id +
           "/" +
           visibility,
@@ -157,7 +159,7 @@ const Dashboard = () => {
           headers: {
             Authorization: "Bearer " + token,
           },
-        },
+        }
       )
       .then(() => {
         setDetailPopup(false);
@@ -173,13 +175,13 @@ const Dashboard = () => {
     e.preventDefault();
     axios
       .post(
-        "http://localhost:3000/meeting/creatInstantMeetingEvent/",
+        API_URL+"/meeting/creatInstantMeetingEvent/",
         {},
         {
           headers: {
             Authorization: "Bearer " + token,
           },
-        },
+        }
       )
       .then((res) => {
         window.location.href = res.data.meetLink;
@@ -192,7 +194,7 @@ const Dashboard = () => {
 
   function getEvents() {
     axios
-      .get("http://localhost:3000/calendar/syncFromGoogle", {
+      .get(API_URL+"/calendar/syncFromGoogle", {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -214,7 +216,7 @@ const Dashboard = () => {
     setSelectedEvent(e);
     setDetailPopup(true);
     axios
-      .get("http://localhost:3000/calendar/getVisibility/" + e._id, {
+      .get(API_URL+"/calendar/getVisibility/" + e._id, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -224,43 +226,64 @@ const Dashboard = () => {
       });
   };
 
-  const handleDeleteSubmit = (e) => {
+  const handleDeleteSubmit = async (e) => {
     e.preventDefault();
-    console.log(selectedEvent.googleEventID);
-    axios
-      .delete(
-        `http://localhost:3000/calendar/deleteEvent/${selectedEvent.googleEventID}`,
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        },
-      )
-      .then(() => {
-        setDetailPopup(false);
-        getEvents();
-      })
-      .catch((err) => {
-        console.log(err.response.data.error);
-        setError(err.response.data.error + "*");
-      });
+    const collabStatus = await checkCollabEvent();
+    if (collabStatus) {
+      axios
+        .delete(
+          `${API_URL}/calendar/deleteEvent/${selectedEvent.googleEventID}`,
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          }
+        )
+        .then(() => {
+          setDetailPopup(false);
+          getEvents();
+        })
+        .catch((err) => {
+          console.log(err.response.data.error);
+          setError(err.response.data.error + "*");
+        });
+    } else {
+      setShowLogoutPopup(true);
+    }
   };
 
-  const handleEditSubmit = (e) => {
+  async function checkCollabEvent() {
+    const res = await axios.get(
+      API_URL+"/calendar/checkCollabEvent/" + selectedEvent._id,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    return res.data.msg;
+  }
+
+  const handleEditSubmit = async (e) => {
     e.preventDefault();
-    const formattedDate = format(selectedEvent.start, "yyyy-MM-dd");
-    const stime1 = format(selectedEvent.start, "HH:mm");
-    const etime1 = format(selectedEvent.end, "HH:mm");
-    setEditEvent({
-      title: selectedEvent.title,
-      date: formattedDate,
-      start: stime1,
-      end: etime1,
-      description: selectedEvent.description,
-    });
-    setDetailPopup(false);
-    setEditMode(true);
-    setShowPopup(true);
+    const collabStatus = await checkCollabEvent();
+    if (collabStatus) {
+      const formattedDate = format(selectedEvent.start, "yyyy-MM-dd");
+      const stime1 = format(selectedEvent.start, "HH:mm");
+      const etime1 = format(selectedEvent.end, "HH:mm");
+      setEditEvent({
+        title: selectedEvent.title,
+        date: formattedDate,
+        start: stime1,
+        end: etime1,
+        description: selectedEvent.description,
+      });
+      setDetailPopup(false);
+      setEditMode(true);
+      setShowPopup(true);
+    } else {
+      setShowLogoutPopup(true);
+    }
   };
 
   useEffect(() => {
@@ -335,10 +358,7 @@ const Dashboard = () => {
           <button className="add-event-btn" onClick={() => setShowPopup(true)}>
             +
           </button>
-          <button
-            className="add-event-btn"
-            onClick={handleInstantMeeting}
-          >
+          <button className="add-event-btn" onClick={handleInstantMeeting}>
             Start Instant Meeting
           </button>
         </div>
@@ -533,6 +553,18 @@ const Dashboard = () => {
                   </div>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {showLogoutPopup && (
+          <div className="overlay">
+            <div className="popup">
+              <h3>Only host can modify the collaborative event.</h3>
+
+              <div className="buttons">
+                <button onClick={() => setShowLogoutPopup(false)}>OK</button>
+              </div>
             </div>
           </div>
         )}

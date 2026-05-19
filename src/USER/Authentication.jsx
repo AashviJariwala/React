@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {API_URL} from "../config"
 
 const Authentication = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const Authentication = () => {
     e.preventDefault();
     axios
       .post(
-        "http://localhost:3000/auth/idCard",
+        API_URL+"/auth/idCard",
         {
           photo,
         },

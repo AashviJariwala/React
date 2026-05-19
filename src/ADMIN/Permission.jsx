@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import {API_URL} from "../config"
+
 
 const Permission = () => {
   const [name, setName] = useState("");
@@ -16,7 +18,7 @@ const Permission = () => {
 
   function getData() {
     axios
-      .get("http://localhost:3000/admin/displayPermission", {
+      .get(API_URL+"/admin/displayPermission", {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -83,7 +85,7 @@ const Permission = () => {
 
 
     axios
-      .delete("http://localhost:3000/admin/deletePermission/" + selectedPers, {
+      .delete(API_URL+"/admin/deletePermission/" + selectedPers, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -109,7 +111,7 @@ const Permission = () => {
 
     axios
       .put(
-        "http://localhost:3000/admin/editPermission/" + selectedEditPers,
+        API_URL+"/admin/editPermission/" + selectedEditPers,
         {
           name,
         },
@@ -139,7 +141,7 @@ const Permission = () => {
     if (!editMode) {
       axios
         .post(
-          "http://localhost:3000/admin/insertPermission",
+          API_URL+"/admin/insertPermission",
           {
             name,
           },

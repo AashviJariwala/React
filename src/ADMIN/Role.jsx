@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import {API_URL} from "../config"
+
 
 const Role = () => {
   const [name, setName] = useState("");
@@ -16,7 +18,7 @@ const Role = () => {
 
   function getData() {
     axios
-      .get("http://localhost:3000/admin/displayRole", {
+      .get(API_URL+"/admin/displayRole", {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -81,13 +83,8 @@ const Role = () => {
       return;
     }
 
-    // if (selectedRoles.length === 0) {
-    //   alert("Please select at least one role to delete.");
-    //   return;
-    // }
-
     axios
-      .delete("http://localhost:3000/admin/deleteRole/" + selectedRoles, {
+      .delete(API_URL+"/admin/deleteRole/" + selectedRoles, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -113,7 +110,7 @@ const Role = () => {
 
     axios
       .put(
-        "http://localhost:3000/admin/editRole/" + selectedEditRoles,
+        API_URL+"/admin/editRole/" + selectedEditRoles,
         {
           name,
         },
@@ -143,7 +140,7 @@ const Role = () => {
     if (!editMode) {
       axios
         .post(
-          "http://localhost:3000/admin/insertRole",
+          API_URL+"/admin/insertRole",
           {
             name,
           },
