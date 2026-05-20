@@ -377,6 +377,13 @@ const Dashboard = () => {
               start: new Date(e.start),
               end: new Date(e.end),
             }))}
+          events={event
+            .filter((e) => e.start && e.end)
+            .map((e) => ({
+              ...e,
+              start: new Date(e.start),
+              end: new Date(e.end),
+            }))}
           view={view}
           date={date}
           onView={handleViewChange}

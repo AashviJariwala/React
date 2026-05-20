@@ -21,6 +21,8 @@ import UserProfile from "./USER/UserProfile.jsx";
 import Meeting from "./USER/Meeting.jsx";
 import SearchByTimeSlot from "./USER/SearchByTimeSlot.jsx";
 import CollaborativeEvents from "./USER/CollaborativeEvents.jsx";
+import ProtectedRoute from "./USER/ProtectedRoute.jsx";
+import UserData from "./USER/UserData.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -79,19 +81,21 @@ createRoot(document.getElementById("root")).render(
         <Route
           path="/"
           element={
-              <UserBackgroundLayout>
-                <UserLogin />
-              </UserBackgroundLayout>
+            <UserBackgroundLayout>
+              <UserLogin />
+            </UserBackgroundLayout>
           }
         />
-          <Route
-            path="/dashboard"
-            element={
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
               <UserBackgroundLayout>
                 <UserDashboard />
               </UserBackgroundLayout>
-            }
-          />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/google/callback"
           element={
@@ -103,65 +107,91 @@ createRoot(document.getElementById("root")).render(
         <Route
           path="/authentication"
           element={
-            <UserBackgroundLayout>
-              <Authentication />
-            </UserBackgroundLayout>
+            <ProtectedRoute>
+              <UserBackgroundLayout>
+                <Authentication />
+              </UserBackgroundLayout>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/updateCard"
           element={
-            <UserBackgroundLayout>
-              <Authentication />
-            </UserBackgroundLayout>
+            <ProtectedRoute>
+              <UserBackgroundLayout>
+                <Authentication />
+              </UserBackgroundLayout>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/search"
           element={
-            <UserBackgroundLayout>
-              <Search />
-            </UserBackgroundLayout>
+            <ProtectedRoute>
+              <UserBackgroundLayout>
+                <Search />
+              </UserBackgroundLayout>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/editVisibility"
           element={
-            <UserBackgroundLayout>
-              <UpdateUser />
-            </UserBackgroundLayout>
+            <ProtectedRoute>
+              <UserBackgroundLayout>
+                <UpdateUser />
+              </UserBackgroundLayout>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/searchByTimeslot"
           element={
-            <UserBackgroundLayout>
-              <SearchByTimeSlot />
-            </UserBackgroundLayout>
+            <ProtectedRoute>
+              <UserBackgroundLayout>
+                <SearchByTimeSlot />
+              </UserBackgroundLayout>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/userProfile"
           element={
-            <UserBackgroundLayout>
-              <UserProfile />
-            </UserBackgroundLayout>
+            <ProtectedRoute>
+              <UserBackgroundLayout>
+                <UserProfile />
+              </UserBackgroundLayout>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/meeting"
           element={
-            <UserBackgroundLayout>
-              <Meeting />
-            </UserBackgroundLayout>
+            <ProtectedRoute>
+              <UserBackgroundLayout>
+                <Meeting />
+              </UserBackgroundLayout>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/collab"
           element={
-            <UserBackgroundLayout>
-              <CollaborativeEvents />
-            </UserBackgroundLayout>
+            <ProtectedRoute>
+              <UserBackgroundLayout>
+                <CollaborativeEvents />
+              </UserBackgroundLayout>
+            </ProtectedRoute>
+          }
+        />
+         <Route
+          path="/userData"
+          element={
+            <ProtectedRoute>
+              <UserBackgroundLayout>
+                <UserData />
+              </UserBackgroundLayout>
+            </ProtectedRoute>
           }
         />
       </Routes>

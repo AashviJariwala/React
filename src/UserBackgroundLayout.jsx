@@ -35,6 +35,11 @@ const UserBackgroundLayout = ({ children}) => {
       });
   }
 
+  const handleUserData = () => {
+    setLabels("Personal Info")
+    navigate("/userData");
+  };
+
   useEffect(()=>{
     if(!hideSidebar)
       getUserDetails();
@@ -165,7 +170,7 @@ const UserBackgroundLayout = ({ children}) => {
           </div>
 
           <div className="main-topbar-right">
-            <div className="profile-circle">{initials}</div>
+            <div className="profile-circle" onClick={handleUserData}>{initials}</div>
           </div>
         </header>
 
