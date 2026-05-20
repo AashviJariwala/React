@@ -202,7 +202,10 @@ const Dashboard = () => {
         },
       })
       .then((res) => {
-        setEvent(res.data.data);
+     const safeEvents = (res.data.data || []).filter(
+       (e) => e && e.start && e.end,
+     );
+     setEvent(safeEvents);
       })
       .catch((err) => {
         console.log(err.response.data.error);
@@ -367,11 +370,13 @@ const Dashboard = () => {
 
         <Calendar
           localizer={localizer}
-          events={event.map((e) => ({
-            ...e,
-            start: new Date(e.start),
-            end: new Date(e.end),
-          }))}
+          events={event
+            .filter((e) => e.start && e.end)
+            .map((e) => ({
+              ...e,
+              start: new Date(e.start),
+              end: new Date(e.end),
+            }))}
           view={view}
           date={date}
           onView={handleViewChange}
