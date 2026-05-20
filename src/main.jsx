@@ -27,7 +27,6 @@ createRoot(document.getElementById("root")).render(
     <Router>
       <Routes>
         {/* Admin routes */}
-
         <Route
           path="/admin"
           element={
@@ -68,7 +67,6 @@ createRoot(document.getElementById("root")).render(
             </AdminBackgroundLayout>
           }
         />
-
         <Route
           path="/admin/permission"
           element={
@@ -81,19 +79,19 @@ createRoot(document.getElementById("root")).render(
         <Route
           path="/"
           element={
-            <UserBackgroundLayout>
-              <UserLogin />
-            </UserBackgroundLayout>
+              <UserBackgroundLayout>
+                <UserLogin />
+              </UserBackgroundLayout>
           }
         />
-        <Route
-          path="/dashboard"
-          element={
-            <UserBackgroundLayout>
-              <UserDashboard />
-            </UserBackgroundLayout>
-          }
-        />
+          <Route
+            path="/dashboard"
+            element={
+              <UserBackgroundLayout>
+                <UserDashboard />
+              </UserBackgroundLayout>
+            }
+          />
         <Route
           path="/google/callback"
           element={
@@ -118,7 +116,6 @@ createRoot(document.getElementById("root")).render(
             </UserBackgroundLayout>
           }
         />
-
         <Route
           path="/search"
           element={
@@ -127,7 +124,6 @@ createRoot(document.getElementById("root")).render(
             </UserBackgroundLayout>
           }
         />
-
         <Route
           path="/editVisibility"
           element={
@@ -136,7 +132,6 @@ createRoot(document.getElementById("root")).render(
             </UserBackgroundLayout>
           }
         />
-
         <Route
           path="/searchByTimeslot"
           element={
@@ -145,7 +140,6 @@ createRoot(document.getElementById("root")).render(
             </UserBackgroundLayout>
           }
         />
-
         <Route
           path="/userProfile"
           element={
@@ -154,7 +148,6 @@ createRoot(document.getElementById("root")).render(
             </UserBackgroundLayout>
           }
         />
-
         <Route
           path="/meeting"
           element={
@@ -163,7 +156,7 @@ createRoot(document.getElementById("root")).render(
             </UserBackgroundLayout>
           }
         />
-          <Route
+        <Route
           path="/collab"
           element={
             <UserBackgroundLayout>
@@ -173,5 +166,5 @@ createRoot(document.getElementById("root")).render(
         />
       </Routes>
     </Router>
-  </StrictMode>,
+  </StrictMode>
 );
