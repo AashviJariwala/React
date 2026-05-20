@@ -5,7 +5,7 @@ import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import axios from "axios";
 import Switch from "react-switch";
-import {API_URL} from "../config"
+import { API_URL } from "../config";
 
 const locales = {
   "en-US": enUS,
@@ -36,8 +36,8 @@ const Dashboard = () => {
   const [visibility, setVisibility] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [editMode, setEditMode] = useState(false);
-  const [day, setDay] = useState("");
-  const [edate, setEdate] = useState("");
+  // const [day, setDay] = useState("");
+  // const [edate, setEdate] = useState("");
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const [editEvent, setEditEvent] = useState({
     title: "",
@@ -88,7 +88,7 @@ const Dashboard = () => {
     if (!editMode) {
       axios
         .post(
-          API_URL+"/calendar/createEvent/",
+          API_URL + "/calendar/createEvent/",
           {
             title: newEvent["title"],
             date: newEvent["date"],
@@ -101,7 +101,7 @@ const Dashboard = () => {
             headers: {
               Authorization: "Bearer " + token,
             },
-          }
+          },
         )
         .then((res) => {
           console.log(res.data.data);
@@ -115,7 +115,8 @@ const Dashboard = () => {
     } else {
       axios
         .put(
-          API_URL+"/calendar/editEvent/" +
+          API_URL +
+            "/calendar/editEvent/" +
             selectedEvent._id +
             "/" +
             selectedEvent.googleEventID,
@@ -131,7 +132,7 @@ const Dashboard = () => {
             headers: {
               Authorization: "Bearer " + token,
             },
-          }
+          },
         )
         .then((res) => {
           console.log(res.data.data);
@@ -150,7 +151,8 @@ const Dashboard = () => {
     e.preventDefault();
     axios
       .put(
-        API_URL+"/calendar/editEventVisibility/" +
+        API_URL +
+          "/calendar/editEventVisibility/" +
           selectedEvent._id +
           "/" +
           visibility,
@@ -159,7 +161,7 @@ const Dashboard = () => {
           headers: {
             Authorization: "Bearer " + token,
           },
-        }
+        },
       )
       .then(() => {
         setDetailPopup(false);
@@ -175,13 +177,13 @@ const Dashboard = () => {
     e.preventDefault();
     axios
       .post(
-        API_URL+"/meeting/creatInstantMeetingEvent/",
+        API_URL + "/meeting/creatInstantMeetingEvent/",
         {},
         {
           headers: {
             Authorization: "Bearer " + token,
           },
-        }
+        },
       )
       .then((res) => {
         window.location.href = res.data.meetLink;
@@ -194,7 +196,7 @@ const Dashboard = () => {
 
   function getEvents() {
     axios
-      .get(API_URL+"/calendar/syncFromGoogle", {
+      .get(API_URL + "/calendar/syncFromGoogle", {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -209,14 +211,14 @@ const Dashboard = () => {
   }
 
   const handleEventChange = (e) => {
-    const day = format(e.start, "EEEE");
-    const date = format(e.start, "dd MMMM yyyy");
-    setDay(day);
-    setEdate(date);
+    // const day = format(e.start, "EEEE");
+    // const date = format(e.start, "dd MMMM yyyy");
+    // setDay(day);
+    // setEdate(date);
     setSelectedEvent(e);
     setDetailPopup(true);
     axios
-      .get(API_URL+"/calendar/getVisibility/" + e._id, {
+      .get(API_URL + "/calendar/getVisibility/" + e._id, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -237,7 +239,7 @@ const Dashboard = () => {
             headers: {
               Authorization: "Bearer " + token,
             },
-          }
+          },
         )
         .then(() => {
           setDetailPopup(false);
@@ -254,12 +256,12 @@ const Dashboard = () => {
 
   async function checkCollabEvent() {
     const res = await axios.get(
-      API_URL+"/calendar/checkCollabEvent/" + selectedEvent._id,
+      API_URL + "/calendar/checkCollabEvent/" + selectedEvent._id,
       {
         headers: {
           Authorization: "Bearer " + token,
         },
-      }
+      },
     );
     return res.data.msg;
   }
@@ -525,14 +527,15 @@ const Dashboard = () => {
 
                   <div className="event-row">
                     <span>
-                      🕒 {day},{edate}
+                      {/*  {day},{edate} */}
+                      🕒 {selectedEvent.dateTime}
                     </span>
                   </div>
 
                   <div className="event-row">
                     <p style={{ textTransform: "capitalize" }}>
                       {selectedEvent.description && (
-                        <p>☰ &nbsp; {selectedEvent.description}</p>
+                        <p>☰ &nbsp; {selectedEvent.description} </p>
                       )}
                     </p>
                   </div>
