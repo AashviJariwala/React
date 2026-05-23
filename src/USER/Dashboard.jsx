@@ -36,8 +36,6 @@ const Dashboard = () => {
   const [visibility, setVisibility] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [editMode, setEditMode] = useState(false);
-  // const [day, setDay] = useState("");
-  // const [edate, setEdate] = useState("");
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const [editEvent, setEditEvent] = useState({
     title: "",
@@ -46,6 +44,7 @@ const Dashboard = () => {
     end: "",
     description: "",
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   const months = [
     "January",
@@ -101,7 +100,7 @@ const Dashboard = () => {
             headers: {
               Authorization: "Bearer " + token,
             },
-          },
+          }
         )
         .then((res) => {
           console.log(res.data.data);
@@ -132,7 +131,7 @@ const Dashboard = () => {
             headers: {
               Authorization: "Bearer " + token,
             },
-          },
+          }
         )
         .then((res) => {
           console.log(res.data.data);
@@ -161,7 +160,7 @@ const Dashboard = () => {
           headers: {
             Authorization: "Bearer " + token,
           },
-        },
+        }
       )
       .then(() => {
         setDetailPopup(false);
@@ -183,7 +182,7 @@ const Dashboard = () => {
           headers: {
             Authorization: "Bearer " + token,
           },
-        },
+        }
       )
       .then((res) => {
         window.location.href = res.data.meetLink;
@@ -195,6 +194,7 @@ const Dashboard = () => {
   };
 
   function getEvents() {
+    setIsLoading(true);
     axios
       .get(API_URL + "/calendar/syncFromGoogle", {
         headers: {
@@ -202,22 +202,20 @@ const Dashboard = () => {
         },
       })
       .then((res) => {
-     const safeEvents = (res.data.data || []).filter(
-       (e) => e && e.start && e.end,
-     );
-     setEvent(safeEvents);
+        const safeEvents = (res.data.data || []).filter(
+          (e) => e && e.start && e.end
+        );
+        setEvent(safeEvents);
+        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err.response.data.error);
         setError(err.response.data.error + "*");
+        setIsLoading(false);
       });
   }
 
   const handleEventChange = (e) => {
-    // const day = format(e.start, "EEEE");
-    // const date = format(e.start, "dd MMMM yyyy");
-    // setDay(day);
-    // setEdate(date);
     setSelectedEvent(e);
     setDetailPopup(true);
     axios
@@ -242,7 +240,7 @@ const Dashboard = () => {
             headers: {
               Authorization: "Bearer " + token,
             },
-          },
+          }
         )
         .then(() => {
           setDetailPopup(false);
@@ -264,7 +262,7 @@ const Dashboard = () => {
         headers: {
           Authorization: "Bearer " + token,
         },
-      },
+      }
     );
     return res.data.msg;
   }
@@ -294,6 +292,35 @@ const Dashboard = () => {
   useEffect(() => {
     getEvents();
   }, []);
+  if (isLoading) {
+    return (
+      <div className="calendar-loading-container">
+        {/* Spinner */}
+        <div className="spinner-wrapper">
+          <div className="spinner-glow"></div>
+  
+          <div className="spinner-ring"></div>
+  
+          <div className="spinner-center">
+            ⏳
+          </div>
+        </div>
+  
+        {/* Text */}
+        <div className="loading-text">
+          <h2>Syncing your calendar</h2>
+          <p>Fetching events from Google...</p>
+        </div>
+  
+        {/* Animated dots */}
+        <div className="loading-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -370,13 +397,6 @@ const Dashboard = () => {
 
         <Calendar
           localizer={localizer}
-          events={event
-            .filter((e) => e.start && e.end)
-            .map((e) => ({
-              ...e,
-              start: new Date(e.start),
-              end: new Date(e.end),
-            }))}
           events={event
             .filter((e) => e.start && e.end)
             .map((e) => ({

@@ -9,7 +9,6 @@ const UserBackgroundLayout = ({ children}) => {
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const [userName, setUserName] = useState("");
   const [userRole, setUserRole] = useState("");
-  const [labels, setLabels] = useState("Dashboard");
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -36,14 +35,13 @@ const UserBackgroundLayout = ({ children}) => {
   }
 
   const handleUserData = () => {
-    setLabels("Personal Info")
     navigate("/userData");
-  };
+  };  
 
   useEffect(()=>{
     if(!hideSidebar)
       getUserDetails();
-  },[hideSidebar])
+  },[location.pathname])
 
   const handleLogout = () => {
     sessionStorage.removeItem("userToken");
@@ -51,8 +49,7 @@ const UserBackgroundLayout = ({ children}) => {
     navigate("/");
   };
 
-  const closeSidebar = (label) =>{     
-    setLabels(label);
+  const closeSidebar = () =>{     
     setSidebarOpen(false)
   };
 
@@ -81,6 +78,7 @@ const UserBackgroundLayout = ({ children}) => {
     "/searchByTimeslot": "Schedule Meeting",
     "/updateCard": "Update ID Card",
     "/editVisibility": "Update Visibility",
+    "/userData": "Personal Info",
   };
 
   const currentTitle = pageTitles[location.pathname] || "Synchro";
@@ -100,7 +98,6 @@ const UserBackgroundLayout = ({ children}) => {
         className={`sidebar-overlay ${sidebarOpen ? "visible" : ""}`}
         onClick={closeSidebar}
       />
-
       {/* Left Sidebar */}
       <aside className={`new-sidebar ${sidebarOpen ? "open" : ""}`}>
         {/* Brand */}
@@ -126,7 +123,7 @@ const UserBackgroundLayout = ({ children}) => {
               key={to}
               to={to}
               className={`sidebar-link ${location.pathname === to ? "active" : ""}`}
-              onClick={()=>closeSidebar(label)}
+              onClick={()=>closeSidebar()}
             >
               <span className="sidebar-link-inner">{label}</span>
               {badge && (
@@ -141,7 +138,7 @@ const UserBackgroundLayout = ({ children}) => {
           <div
             className="sidebar-link"
             onClick={() => {
-              closeSidebar(labels);
+              closeSidebar();
               setShowLogoutPopup(true);
             }}
             style={{ cursor: "pointer" }}
@@ -165,7 +162,7 @@ const UserBackgroundLayout = ({ children}) => {
               ☰
             </button>
             <span className="main-topbar-greeting">
-              {labels}
+              {currentTitle}
             </span>
           </div>
 

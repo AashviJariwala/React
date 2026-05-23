@@ -16,9 +16,12 @@ const Authentication = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if(photo==null){
+      setError("Please choose your ID Card*");
+    }else{
     axios
       .post(
-        API_URL+"/auth/idCard",
+        API_URL+"/auth/idCard", 
         {
           photo,
         },
@@ -29,15 +32,15 @@ const Authentication = () => {
           },
         }
       )
-      .then(() => {
-        // console.log(res.data.data);
+      .then((response) => {
         navigate("/dashboard");
       })
       .catch((err) => {
-        console.log(err.response.data.error);
-        setError(err.response.data.error + "*");
+        setError(err.response.data.msg + "*");
       });
+    }
   };
+
   return (
     <div className="login-container">
       <div className="login-card">
@@ -50,7 +53,6 @@ const Authentication = () => {
               id="photo"
               name="photo"
               onChange={handleChange}
-              required
               accept="image/jpg,image/jpeg,image/png"
             />
 

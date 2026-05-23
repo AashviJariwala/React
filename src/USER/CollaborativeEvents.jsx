@@ -163,7 +163,7 @@ const CollaborativeEvents= () => {
         {/* BUTTON */}
         <div className="button-container">
           <button className="ok-btn" onClick={()=>setShowPopup(true)}>
-           Add Partcipants
+           Add Employees
           </button>
         </div>
         {showPopup && (

@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import {API_URL} from "../config"
+import { API_URL } from "../config";
 
 const Department = () => {
   const [name, setName] = useState("");
   const [result, setResult] = useState([]);
   const [error, setError] = useState("");
-  const [deleteMode, setDeleteMode] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [selectedDepts, setselectedDepts] = useState([]);
   const [selectedEditDepts, setselectedEditDepts] = useState("");
@@ -39,14 +38,6 @@ const Department = () => {
   useEffect(() => {
     function handleClickOutside(event) {
       if (
-        deleteMode &&
-        containerRef.current &&
-        !containerRef.current.contains(event.target)
-      ) {
-        setDeleteMode(false);
-        setselectedEditDepts("");
-      }
-      if (
         editMode &&
         containerRef.current &&
         !containerRef.current.contains(event.target)
@@ -62,7 +53,7 @@ const Department = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [deleteMode, editMode]);
+  }, [editMode]);
 
   const handleCheckboxChange = (id) => {
     setselectedDepts((prev) =>
@@ -74,36 +65,6 @@ const Department = () => {
     console.log("edit");
     setName(name);
     setselectedEditDepts(selectedEditDepts === id ? null : id);
-  };
-
-  const handleDeleteClick = () => {
-    if (!deleteMode) {
-      setDeleteMode(true);
-      return;
-    }
-
-    // if (selectedDepts.length === 0) {
-    //   alert("Please select at least one role to delete.");
-    //   return;
-    // }
-
-    axios
-      .delete(API_URL + "/admin/deleteDept/" + selectedDepts, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => {
-        console.log(res.data.msg);
-        getData();
-        setDeleteMode(false);
-      })
-      .catch((err) => {
-        console.log(err.response.data.error);
-        document.getElementById("d1").style.color = "red";
-        document.getElementById("d1").innerHTML =
-          "<span style='color:red'>*</span> " + err.response.data.error;
-      });
   };
 
   const handleEditClick = () => {
@@ -176,15 +137,6 @@ const Department = () => {
         <div className="card-grid">
           {result.map((r) => (
             <div key={r._id} className="role-card">
-              {deleteMode && (
-                <input
-                  type="checkbox"
-                  className="checkbox"
-                  onChange={() => handleCheckboxChange(r._id)}
-                  style={{ marginBottom: "10px", transform: "scale(1.3)" }}
-                />
-              )}
-
               {editMode && (
                 <input
                   type="checkbox"
@@ -203,13 +155,6 @@ const Department = () => {
         <div className="button-container">
           <button type="submit" className="edit-btn" onClick={handleEditClick}>
             Edit
-          </button>
-          <button
-            type="submit"
-            className="edit-btn"
-            onClick={handleDeleteClick}
-          >
-            {deleteMode ? "Confirm Delete" : "Delete"}
           </button>
         </div>
         <div className="login-container">

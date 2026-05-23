@@ -65,6 +65,7 @@ const Meeting = () => {
       .then((res) => {
         setMeetID("");
         setParticipantID([]);
+        navigate("/dashboard");
       });
   };
   useEffect(() => {

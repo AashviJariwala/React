@@ -7,7 +7,6 @@ const Role = () => {
   const [name, setName] = useState("");
   const [result, setResult] = useState([]);
   const [error, setError] = useState("");
-  const [deleteMode, setDeleteMode] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [selectedRoles, setSelectedRoles] = useState([]);
   const [selectedEditRoles, setSelectedEditRoles] = useState("");
@@ -40,14 +39,6 @@ const Role = () => {
   useEffect(() => {
     function handleClickOutside(event) {
       if (
-        deleteMode &&
-        containerRef.current &&
-        !containerRef.current.contains(event.target)
-      ) {
-        setDeleteMode(false);
-        setSelectedEditRoles("");
-      }
-      if (
         editMode &&
         containerRef.current &&
         !containerRef.current.contains(event.target)
@@ -63,7 +54,7 @@ const Role = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [deleteMode, editMode]);
+  }, [editMode]);
 
   const handleCheckboxChange = (id) => {
     setSelectedRoles((prev) =>
@@ -75,31 +66,6 @@ const Role = () => {
     console.log("edit");
     setName(name);
     setSelectedEditRoles(selectedEditRoles === id ? null : id);
-  };
-
-  const handleDeleteClick = () => {
-    if (!deleteMode) {
-      setDeleteMode(true);
-      return;
-    }
-
-    axios
-      .delete(API_URL+"/admin/deleteRole/" + selectedRoles, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => {
-        console.log(res.data.msg);
-        getData();
-        setDeleteMode(false);
-      })
-      .catch((err) => {
-        console.log(err.response.data.error);
-        document.getElementById("d1").style.color = "red";
-        document.getElementById("d1").innerHTML =
-          "<span style='color:red'>*</span> " + err.response.data.error;
-      });
   };
 
   const handleEditClick = () => {
@@ -172,15 +138,6 @@ const Role = () => {
         <div className="card-grid">
           {result.map((r) => (
             <div key={r._id} className="role-card">
-              {deleteMode && (
-                <input
-                  type="checkbox"
-                  className="checkbox"
-                  onChange={() => handleCheckboxChange(r._id)}
-                  style={{ marginBottom: "10px", transform: "scale(1.3)" }}
-                />
-              )}
-
               {editMode && (
                 <input
                   type="checkbox"
@@ -199,13 +156,6 @@ const Role = () => {
         <div className="button-container">
           <button type="submit" className="edit-btn" onClick={handleEditClick}>
             Edit
-          </button>
-          <button
-            type="submit"
-            className="edit-btn"
-            onClick={handleDeleteClick}
-          >
-            {deleteMode ? "Confirm Delete" : "Delete"}
           </button>
         </div>
         <div className="login-container">

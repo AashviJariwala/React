@@ -14,7 +14,6 @@ import UserDashboard from "./USER/Dashboard.jsx";
 import AdminBackgroundLayout from "./AdminBackgroundLayout.jsx";
 import UserBackgroundLayout from "./UserBackgroundLayout.jsx";
 import User from "./ADMIN/User.jsx";
-import Permission from "./ADMIN/Permission.jsx";
 import Search from "./USER/Search.jsx";
 import UpdateUser from "./USER/UpdateUser.jsx";
 import UserProfile from "./USER/UserProfile.jsx";
@@ -66,14 +65,6 @@ createRoot(document.getElementById("root")).render(
           element={
             <AdminBackgroundLayout>
               <User />
-            </AdminBackgroundLayout>
-          }
-        />
-        <Route
-          path="/admin/permission"
-          element={
-            <AdminBackgroundLayout>
-              <Permission />
             </AdminBackgroundLayout>
           }
         />
@@ -184,7 +175,7 @@ createRoot(document.getElementById("root")).render(
             </ProtectedRoute>
           }
         />
-         <Route
+        <Route
           path="/userData"
           element={
             <ProtectedRoute>

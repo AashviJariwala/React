@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SearchByTimeSlot = () => {
   const [error, setError] = useState("");
@@ -15,6 +16,7 @@ const SearchByTimeSlot = () => {
     description: "",
   });
 
+  const navigate = useNavigate();
   const token = sessionStorage.getItem("userToken");
 
   // get all users
@@ -63,7 +65,7 @@ const SearchByTimeSlot = () => {
 
     axios
       .post(
-        "http://localhost:3000/calendar/createEvent/",
+        "http://localhost:3000/meeting/scheduleMeeting/",
         {
           title: newEvent.title,
           date: newEvent.date,
@@ -75,10 +77,14 @@ const SearchByTimeSlot = () => {
           headers: {
             Authorization: "Bearer " + token,
           },
-        },
+        }
       )
       .then(() => {
         setShowPopup(false);
+        setResult([]);
+        setParticipantID([]);
+        setFreeSlots([]);
+        navigate("/meeting");
       })
       .catch((err) => {
         console.log(err.response?.data?.error);
@@ -104,7 +110,7 @@ const SearchByTimeSlot = () => {
         { uid: participantID },
         {
           headers: { Authorization: "Bearer " + token },
-        },
+        }
       )
       .then((res) => {
         setFreeSlots(res.data.data); // <-- important
