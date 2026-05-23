@@ -194,6 +194,7 @@ const CollaborativeEvents= () => {
                     name="date"
                     value={newEvent.date}
                     onChange={handleChange}
+                    min={format(new Date(), "yyyy-MM-dd")} 
                   />
 
                   <label>Start Time</label>
@@ -210,6 +211,7 @@ const CollaborativeEvents= () => {
                     name="end"
                     value={newEvent.end}
                     onChange={handleChange}
+                    min={newEvent.start}
                   />
 
                   <label>Description</label>
@@ -247,6 +249,7 @@ const CollaborativeEvents= () => {
                     name="date"
                     value={editEvent.date}
                     onChange={handleChange}
+                    min={format(new Date(), "yyyy-MM-dd")} 
                   />
                   <label>Start Time</label>
                   <input
@@ -261,6 +264,7 @@ const CollaborativeEvents= () => {
                     name="end"
                     value={editEvent.end}
                     onChange={handleChange}
+                    min={editEvent.start}
                   />
                   <label>Description</label>
                   <textarea

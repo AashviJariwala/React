@@ -219,6 +219,7 @@ const SearchByTimeSlot = () => {
                   name="end"
                   value={newEvent.end}
                   onChange={handleChange}
+                  min={newEvent.start}
                 />
 
                 <label>Description</label>
