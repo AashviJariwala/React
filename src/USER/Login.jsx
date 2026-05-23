@@ -13,7 +13,7 @@ const Login = () => {
       window.history.replaceState({}, "", window.location.pathname);
     }
   }, []);
-
+  console.log("API", API_URL);
   const handleGoogleLogin = () => {
     window.location.href = API_URL + "/login/google";
   };
