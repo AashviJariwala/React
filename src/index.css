@@ -923,6 +923,9 @@ select:hover {
   color: #333;
 }
 
+.asterisk {
+  color: red;
+}
 .add-event-btn {
   margin: 10px 0 15px 0;
   padding: 8px 14px;

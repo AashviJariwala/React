@@ -49,24 +49,29 @@ const Meeting = () => {
   }
 
   const handleNotifications = () => {
-    axios
-      .post(
-        API_URL + "/meeting/sendNoti",
-        {
-          meetID: meetID,
-          participantID: participantID,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + token,
+    if (!meetID || meetID==="0"||participantID.length==0) {
+      setError("*Please select meeting or employees");
+    } else {
+      setError("");
+      axios
+        .post(
+          API_URL + "/meeting/sendNoti",
+          {
+            meetID: meetID,
+            participantID: participantID,
           },
-        }
-      )
-      .then((res) => {
-        setMeetID("");
-        setParticipantID([]);
-        navigate("/dashboard");
-      });
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          }
+        )
+        .then((res) => {
+          setMeetID("");
+          setParticipantID([]);
+          navigate("/dashboard");
+        });
+    }
   };
   useEffect(() => {
     if (query.length === 0) {
@@ -120,7 +125,7 @@ const Meeting = () => {
 
         <div className="search-box">
           <select onChange={handleMeetChange}>
-            <option>--SELECT MEETING LINK--</option>
+            <option value={0}>--SELECT MEETING LINK--</option>
             {meetingLink.map((r, index) => (
               <option className="user-name" value={r.id} key={index}>
                 {r.title
@@ -134,11 +139,12 @@ const Meeting = () => {
       {query && (
         <div className="user-list-container">
           {searchRes.map((r, index) => (
-            <div
-              key={index}
-              className="user-row"
-              onClick={(r) => handleClick(r)}
-            >
+            <div key={index} className="user-row">
+              <input
+                type="checkbox"
+                value={r._id}
+                onChange={handleParticipantChange}
+              />
               <div className="avatar">
                 <span>👤</span>
               </div>

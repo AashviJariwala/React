@@ -1,17 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {useNavigate}  from "react-router-dom";
-import {API_URL} from "../config"
+import { useNavigate } from "react-router-dom";
+import { API_URL } from "../config";
+import { format, parse, startOfWeek, getDay } from "date-fns";
 
-const CollaborativeEvents= () => {
-  const navigate=useNavigate();
+const CollaborativeEvents = () => {
+  const navigate = useNavigate();
   const [error, setError] = useState("");
-  const [result, setResult] = useState([]); 
+  const [result, setResult] = useState([]);
   const [participantID, setParticipantID] = useState([]);
-  const [freeSlots, setFreeSlots] = useState([]);
-  const [view, setView] = useState("month");
-  const [date, setDate] = useState(new Date());
-  const [event, setEvent] = useState([]);
   const [newEvent, setNewEvent] = useState({
     title: "",
     date: "",
@@ -20,26 +17,12 @@ const CollaborativeEvents= () => {
     description: "",
   });
   const [showPopup, setShowPopup] = useState(false);
-  const [detailPopup, setDetailPopup] = useState(false);
-  const [visibility, setVisibility] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [editMode, setEditMode] = useState(false);
-  const [day, setDay] = useState("");
-  const [edate, setEdate] = useState("");
-  const [editEvent, setEditEvent] = useState({
-    title: "",
-    date: "",
-    start: "",
-    end: "",
-    description: "",
-  });
-  
 
   const token = sessionStorage.getItem("userToken");
 
   function getData() {
     axios
-      .get(API_URL+"/search/showAllEmployee", {
+      .get(API_URL + "/search/showAllEmployee", {
         headers: { Authorization: "Bearer " + token },
       })
       .then((res) => {
@@ -61,81 +44,64 @@ const CollaborativeEvents= () => {
   };
 
   const handleChange = (e) => {
-    if (!editMode) {
-      const { name, value } = e.target;
-      setNewEvent((values) => ({
-        ...values,
-        [name]: value,
-      }));
-    } else {
-      const { name, value } = e.target;
-      setEditEvent((values) => ({
-        ...values,
-        [name]: value,
-      }));
-    }
+    const { name, value } = e.target;
+    setNewEvent((values) => ({
+      ...values,
+      [name]: value,
+    }));
   };
 
+  const handleClick = (e) => {
+    if (participantID.length == 0)
+      setError("*Please select employees you want to collaborate with.");
+    else {
+      setError("");
+      setShowPopup(true);
+    }
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!editMode) {
-      axios
-        .post(
-          API_URL+"/calendar/createCollaborativeEvent/",
-          {
-            title: newEvent["title"],
-            date: newEvent["date"],
-            start: newEvent["start"],
-            end: newEvent["end"],
-            description: newEvent["description"],
-            users:participantID
-          },
-          {
-            headers: {
-              Authorization: "Bearer " + token,
+    if (
+      newEvent.title == "" ||
+      newEvent.date == "" ||
+      newEvent.start == "" ||
+      newEvent.end == ""
+    ) {
+      setError("*Please fill out all the required fields");
+    } else if (
+      new Date(newEvent.date).toDateString() === new Date().toDateString()
+    ) {
+      if (newEvent.start < new Date().toTimeString().slice(0, 5)) {
+        setError("*Start time cannot be in the past");
+      } else {
+        setError("");
+        axios
+          .post(
+            API_URL + "/calendar/createCollaborativeEvent/",
+            {
+              title: newEvent["title"],
+              date: newEvent["date"],
+              start: newEvent["start"],
+              end: newEvent["end"],
+              description: newEvent["description"],
+              users: participantID,
             },
-          },
-        )
-        .then((res) => {
-          console.log(res.data.msg);
-          setShowPopup(false);
-          navigate("/dashboard");
-        })
-        .catch((err) => {
-          console.log(err.response.data.error);
-          setError(err.response.data.error + "*");
-        });
-    } else {
-      axios
-        .put(
-          API_URL+"/calendar/editEvent/" +
-            selectedEvent._id +
-            "/" +
-            selectedEvent.googleEventID,
-          {
-            title: editEvent["title"],
-            date: editEvent["date"],
-            start: editEvent["start"],
-            end: editEvent["end"],
-            description: editEvent["description"],
-            visibility: visibility,
-          },
-          {
-            headers: {
-              Authorization: "Bearer " + token,
-            },
-          },
-        )
-        .then((res) => {
-          console.log(res.data.data);
-          setEditMode(false);
-          setShowPopup(false);
-          getEvents();
-        })
-        .catch((err) => {
-          console.log(err.response.data.error);
-          setError(err.response.data.error + "*");
-        });
+            {
+              headers: {
+                Authorization: "Bearer " + token,
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res.data.msg);
+            setShowPopup(false);
+            navigate("/dashboard");
+          })
+          .catch((err) => {
+            console.log(err.response.data.error);
+            setError(err.response.data.error + "*");
+          });
+      }
     }
   };
   useEffect(() => {
@@ -162,124 +128,80 @@ const CollaborativeEvents= () => {
 
         {/* BUTTON */}
         <div className="button-container">
-          <button className="ok-btn" onClick={()=>setShowPopup(true)}>
-           Add Employees
+          <button className="ok-btn" onClick={handleClick}>
+            Add Employees
           </button>
         </div>
         {showPopup && (
           <div className="event-popup-overlay">
             <form method="post" onSubmit={handleSubmit}>
-              {!editMode ? (
-                <div className="event-popup">
-                  <button
-                    type="button"
-                    className="close-popup"
-                    onClick={() => setShowPopup(false)}
-                  >
-                    ✕
-                  </button>
+              <div className="event-popup">
+                <button
+                  type="button"
+                  className="close-popup"
+                  onClick={() => setShowPopup(false)}
+                >
+                  ✕
+                </button>
 
-                  <h3>Add Event</h3>
-                  <label>Event Title</label>
-                  <input
-                    type="text"
-                    name="title"
-                    value={newEvent.title}
-                    onChange={handleChange}
-                  />
+                <h3>Add Event</h3>
+                <label>
+                  {" "}
+                  Event Title <span className="asterisk">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="title"
+                  value={newEvent.title}
+                  onChange={handleChange}
+                />
 
-                  <label>Date</label>
-                  <input
-                    type="date"
-                    name="date"
-                    value={newEvent.date}
-                    onChange={handleChange}
-                    min={format(new Date(), "yyyy-MM-dd")} 
-                  />
+                <label>
+                  Date<span className="asterisk">*</span>
+                </label>
+                <input
+                  type="date"
+                  name="date"
+                  value={newEvent.date}
+                  onChange={handleChange}
+                  min={format(new Date(), "yyyy-MM-dd")}
+                />
 
-                  <label>Start Time</label>
-                  <input
-                    type="time"
-                    name="start"
-                    value={newEvent.start}
-                    onChange={handleChange}
-                  />
+                <label>
+                  Start Time<span className="asterisk">*</span>
+                </label>
+                <input
+                  type="time"
+                  name="start"
+                  value={newEvent.start}
+                  onChange={handleChange}
+                />
 
-                  <label>End Time</label>
-                  <input
-                    type="time"
-                    name="end"
-                    value={newEvent.end}
-                    onChange={handleChange}
-                    min={newEvent.start}
-                  />
+                <label>
+                  End Time<span className="asterisk">*</span>
+                </label>
+                <input
+                  type="time"
+                  name="end"
+                  value={newEvent.end}
+                  onChange={handleChange}
+                  min={newEvent.start}
+                />
 
-                  <label>Description</label>
-                  <textarea
-                    name="description"
-                    value={newEvent.description}
-                    onChange={handleChange}
-                  ></textarea>
+                <label>Description</label>
+                <textarea
+                  name="description"
+                  value={newEvent.description}
+                  onChange={handleChange}
+                ></textarea>
+                {error && <div className="error-message">{error}</div>}
 
-                  <button className="save-event-btn">Save Event</button>
-                </div>
-              ) : (
-                <div className="event-popup">
-                  <button
-                    type="button"
-                    className="close-popup"
-                    onClick={() => {
-                      setEditMode(false);
-                      setShowPopup(false);
-                    }}
-                  >
-                    ✕
-                  </button>
-                  <h3>Edit Event</h3>
-                  <label>Event Title</label>
-                  <input
-                    type="text"
-                    name="title"
-                    value={editEvent.title}
-                    onChange={handleChange}
-                  />
-                  <label>Date</label>
-                  <input
-                    type="date"
-                    name="date"
-                    value={editEvent.date}
-                    onChange={handleChange}
-                    min={format(new Date(), "yyyy-MM-dd")} 
-                  />
-                  <label>Start Time</label>
-                  <input
-                    type="time"
-                    name="start"
-                    value={editEvent.start}
-                    onChange={handleChange}
-                  />
-                  <label>End Time</label>
-                  <input
-                    type="time"
-                    name="end"
-                    value={editEvent.end}
-                    onChange={handleChange}
-                    min={editEvent.start}
-                  />
-                  <label>Description</label>
-                  <textarea
-                    name="description"
-                    value={editEvent.description}
-                    onChange={handleChange}
-                  ></textarea>
-                  <button className="save-event-btn">Save Event</button>{" "}
-                </div>
-              )}
+                <button className="save-event-btn">Save Event</button>
+              </div>
             </form>
           </div>
         )}
         {error && <div className="error-message">{error}</div>}
-
       </div>
     </>
   );

@@ -85,64 +85,96 @@ const Dashboard = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!editMode) {
-      axios
-        .post(
-          API_URL + "/calendar/createEvent/",
-          {
-            title: newEvent["title"],
-            date: newEvent["date"],
-            start: newEvent["start"],
-            end: newEvent["end"],
-            description: newEvent["description"],
-            visibility: visibility,
-          },
-          {
-            headers: {
-              Authorization: "Bearer " + token,
-            },
-          }
-        )
-        .then((res) => {
-          console.log(res.data.data);
-          setShowPopup(false);
-          getEvents();
-        })
-        .catch((err) => {
-          console.log(err.response.data.error);
-          setError(err.response.data.error + "*");
-        });
+      if (
+        newEvent.title == "" ||
+        newEvent.date == "" ||
+        newEvent.start == "" ||
+        newEvent.end == ""
+      ) {
+        setError("*Please fill out all the required fields");
+      } else if (
+        new Date(newEvent.date).toDateString() === new Date().toDateString()
+      ) {
+        if (newEvent.start < new Date().toTimeString().slice(0, 5))
+          setError("*Start time cannot be in the past");
+        else {
+          setError("");
+          axios
+            .post(
+              API_URL + "/calendar/createEvent/",
+              {
+                title: newEvent["title"],
+                date: newEvent["date"],
+                start: newEvent["start"],
+                end: newEvent["end"],
+                description: newEvent["description"],
+                visibility: visibility,
+              },
+              {
+                headers: {
+                  Authorization: "Bearer " + token,
+                },
+              }
+            )
+            .then((res) => {
+              console.log(res.data.data);
+              setShowPopup(false);
+              getEvents();
+            })
+            .catch((err) => {
+              console.log(err.response.data.error);
+              setError(err.response.data.error + "*");
+            });
+        }
+      }
     } else {
-      axios
-        .put(
-          API_URL +
-            "/calendar/editEvent/" +
-            selectedEvent._id +
-            "/" +
-            selectedEvent.googleEventID,
-          {
-            title: editEvent["title"],
-            date: editEvent["date"],
-            start: editEvent["start"],
-            end: editEvent["end"],
-            description: editEvent["description"],
-            visibility: visibility,
-          },
-          {
-            headers: {
-              Authorization: "Bearer " + token,
-            },
-          }
-        )
-        .then((res) => {
-          console.log(res.data.data);
-          setEditMode(false);
-          setShowPopup(false);
-          getEvents();
-        })
-        .catch((err) => {
-          console.log(err.response.data.error);
-          setError(err.response.data.error + "*");
-        });
+      if (
+        editEvent.title == "" ||
+        editEvent.date == "" ||
+        editEvent.start == "" ||
+        editEvent.end == ""
+      ) {
+        setError("*Please fill out all the required fields");
+      } else if (
+        new Date(editEvent.date).toDateString() === new Date().toDateString()
+      ) {
+        if (editEvent.start < new Date().toTimeString().slice(0, 5))
+          setError("*Start time cannot be in the past");
+        else {
+          setError("");
+          axios
+            .put(
+              API_URL +
+                "/calendar/editEvent/" +
+                selectedEvent._id +
+                "/" +
+                selectedEvent.googleEventID,
+              {
+                title: editEvent["title"],
+                date: editEvent["date"],
+                start: editEvent["start"],
+                end: editEvent["end"],
+                description: editEvent["description"],
+                visibility: visibility,
+              },
+              {
+                headers: {
+                  Authorization: "Bearer " + token,
+                },
+              }
+            )
+            .then((res) => {
+              console.log(res.data.data);
+              setEditMode(false);
+              setShowPopup(false);
+              getEvents();
+            })
+            .catch((err) => {
+              console.log(err.response.data.error);
+              setError(err.response.data.error + "*");
+            });
+        }
+      }
     }
   };
 
@@ -298,20 +330,18 @@ const Dashboard = () => {
         {/* Spinner */}
         <div className="spinner-wrapper">
           <div className="spinner-glow"></div>
-  
+
           <div className="spinner-ring"></div>
-  
-          <div className="spinner-center">
-            ⏳
-          </div>
+
+          <div className="spinner-center">⏳</div>
         </div>
-  
+
         {/* Text */}
         <div className="loading-text">
           <h2>Syncing your calendar</h2>
           <p>Fetching events from Google...</p>
         </div>
-  
+
         {/* Animated dots */}
         <div className="loading-dots">
           <span></span>
@@ -428,7 +458,9 @@ const Dashboard = () => {
                   </button>
 
                   <h3>Add Event</h3>
-                  <label>Event Title</label>
+                  <label>
+                    Event Title<span className="asterisk">*</span>
+                  </label>
                   <input
                     type="text"
                     name="title"
@@ -436,16 +468,20 @@ const Dashboard = () => {
                     onChange={handleChange}
                   />
 
-                  <label>Date</label>
+                  <label>
+                    Date<span className="asterisk">*</span>
+                  </label>
                   <input
                     type="date"
                     name="date"
                     value={newEvent.date}
                     onChange={handleChange}
-                    min={format(new Date(), "yyyy-MM-dd")} 
+                    min={format(new Date(), "yyyy-MM-dd")}
                   />
 
-                  <label>Start Time</label>
+                  <label>
+                    Start Time<span className="asterisk">*</span>
+                  </label>
                   <input
                     type="time"
                     name="start"
@@ -453,7 +489,9 @@ const Dashboard = () => {
                     onChange={handleChange}
                   />
 
-                  <label>End Time</label>
+                  <label>
+                    End Time<span className="asterisk">*</span>
+                  </label>
                   <input
                     type="time"
                     name="end"
@@ -468,6 +506,7 @@ const Dashboard = () => {
                     value={newEvent.description}
                     onChange={handleChange}
                   ></textarea>
+                  {error && <div className="error-message">{error}</div>}
 
                   <button className="save-event-btn">Save Event</button>
                 </div>
@@ -484,14 +523,18 @@ const Dashboard = () => {
                     ✕
                   </button>
                   <h3>Edit Event</h3>
-                  <label>Event Title</label>
+                  <label>
+                    Event Title<span className="asterisk">*</span>
+                  </label>
                   <input
                     type="text"
                     name="title"
                     value={editEvent.title}
                     onChange={handleChange}
                   />
-                  <label>Date</label>
+                  <label>
+                    Date<span className="asterisk">*</span>
+                  </label>
                   <input
                     type="date"
                     name="date"
@@ -499,14 +542,18 @@ const Dashboard = () => {
                     onChange={handleChange}
                     min={format(new Date(), "yyyy-MM-dd")}
                   />
-                  <label>Start Time</label>
+                  <label>
+                    Start Time<span className="asterisk">*</span>
+                  </label>
                   <input
                     type="time"
                     name="start"
                     value={editEvent.start}
                     onChange={handleChange}
                   />
-                  <label>End Time</label>
+                  <label>
+                    End Time<span className="asterisk">*</span>
+                  </label>
                   <input
                     type="time"
                     name="end"
@@ -520,6 +567,7 @@ const Dashboard = () => {
                     value={editEvent.description}
                     onChange={handleChange}
                   ></textarea>
+                  {error && <div className="error-message">{error}</div>}
                   <button className="save-event-btn">Save Event</button>{" "}
                 </div>
               )}
