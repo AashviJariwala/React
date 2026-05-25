@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../config";
 
 const SearchByTimeSlot = () => {
   const [error, setError] = useState("");
@@ -22,7 +23,7 @@ const SearchByTimeSlot = () => {
   // get all users
   function getData() {
     axios
-      .get("http://localhost:3000/search/showAllEmployee", {
+      .get(`${API_URL}/search/showAllEmployee`, {
         headers: { Authorization: "Bearer " + token },
       })
       .then((res) => {
