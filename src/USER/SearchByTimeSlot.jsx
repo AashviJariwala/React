@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../config";
 
 const SearchByTimeSlot = () => {
   const [error, setError] = useState("");
@@ -22,7 +23,7 @@ const SearchByTimeSlot = () => {
   // get all users
   function getData() {
     axios
-      .get("http://localhost:3000/search/showAllEmployee", {
+      .get(`${API_URL}/search/showAllEmployee`, {
         headers: { Authorization: "Bearer " + token },
       })
       .then((res) => {
@@ -62,33 +63,37 @@ const SearchByTimeSlot = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    axios
-      .post(
-        "http://localhost:3000/meeting/scheduleMeeting/",
-        {
-          title: newEvent.title,
-          date: newEvent.date,
-          start: newEvent.start,
-          end: newEvent.end,
-          description: newEvent.description,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + token,
+    if (newEvent.title == "" || newEvent.end == "") {
+      setError("*Please fill out all the required fields");
+    } else {
+      setError("");
+      axios
+        .post(
+          "http://localhost:3000/meeting/scheduleMeeting/",
+          {
+            title: newEvent.title,
+            date: newEvent.date,
+            start: newEvent.start,
+            end: newEvent.end,
+            description: newEvent.description,
           },
-        }
-      )
-      .then(() => {
-        setShowPopup(false);
-        setResult([]);
-        setParticipantID([]);
-        setFreeSlots([]);
-        navigate("/meeting");
-      })
-      .catch((err) => {
-        console.log(err.response?.data?.error);
-      });
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          },
+        )
+        .then(() => {
+          setShowPopup(false);
+          setResult([]);
+          setParticipantID([]);
+          setFreeSlots([]);
+          navigate("/meeting");
+        })
+        .catch((err) => {
+          console.log(err.response?.data?.error);
+        });
+    }
   };
 
   // checkbox select
@@ -104,20 +109,26 @@ const SearchByTimeSlot = () => {
 
   // search free slots
   const handleSearch = () => {
-    axios
-      .post(
-        "http://localhost:3000/search/searchByTimeslot",
-        { uid: participantID },
-        {
-          headers: { Authorization: "Bearer " + token },
-        }
-      )
-      .then((res) => {
-        setFreeSlots(res.data.data); // <-- important
-      })
-      .catch((err) => {
-        console.log(err.response?.data?.error);
-      });
+    if (participantID.length == 0) {
+      setError("*Please select employees");
+    }
+    else{
+      setError("");
+      axios
+        .post(
+          "http://localhost:3000/search/searchByTimeslot",
+          { uid: participantID },
+          {
+            headers: { Authorization: "Bearer " + token },
+          },
+        )
+        .then((res) => {
+          setFreeSlots(res.data.data); // <-- important
+        })
+        .catch((err) => {
+          console.log(err.response?.data?.error);
+        });
+    }
   };
 
   useEffect(() => {
@@ -141,6 +152,7 @@ const SearchByTimeSlot = () => {
             </div>
           ))}
         </div>
+        {error && <div className="error-message">{error}</div>}
 
         {/* BUTTON */}
         <div className="button-container">
@@ -185,9 +197,11 @@ const SearchByTimeSlot = () => {
                   ✕
                 </button>
 
-                <h3>Add Event</h3>
+                <h3>Schedule Meeting</h3>
 
-                <label>Event Title</label>
+                <label>
+                  Meeting Title<span className="asterisk">*</span>
+                </label>
                 <input
                   type="text"
                   name="title"
@@ -195,7 +209,9 @@ const SearchByTimeSlot = () => {
                   onChange={handleChange}
                 />
 
-                <label>Date</label>
+                <label>
+                  Date<span className="asterisk">*</span>
+                </label>
                 <input
                   type="date"
                   name="date"
@@ -204,7 +220,9 @@ const SearchByTimeSlot = () => {
                   readOnly
                 />
 
-                <label>Start Time</label>
+                <label>
+                  Start Time<span className="asterisk">*</span>
+                </label>
                 <input
                   type="time"
                   name="start"
@@ -213,7 +231,9 @@ const SearchByTimeSlot = () => {
                   readOnly
                 />
 
-                <label>End Time</label>
+                <label>
+                  End Time<span className="asterisk">*</span>
+                </label>
                 <input
                   type="time"
                   name="end"
@@ -229,7 +249,9 @@ const SearchByTimeSlot = () => {
                   onChange={handleChange}
                 ></textarea>
 
-                <button className="save-event-btn">Save Event</button>
+                {error && <div className="error-message">{error}</div>}
+
+                <button className="save-event-btn">Save Meeting</button>
               </div>
             </form>
           </div>

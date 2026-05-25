@@ -111,8 +111,18 @@ const UserBackgroundLayout = ({ children}) => {
         {/* User row */}
         <div className="sidebar-user-row">
           <div className="sidebar-user-info">
-            <span className="sidebar-user-name" style={{ textTransform: "capitalize" }}>{userName}</span>
-            <span className="sidebar-user-role" style={{ textTransform: "capitalize" }}>{userRole}</span>
+            <span
+              className="sidebar-user-name"
+              style={{ textTransform: "capitalize" }}
+            >
+              {userName}
+            </span>
+            <span
+              className="sidebar-user-role"
+              style={{ textTransform: "capitalize" }}
+            >
+              {userRole}
+            </span>
           </div>
         </div>
 
@@ -123,11 +133,13 @@ const UserBackgroundLayout = ({ children}) => {
               key={to}
               to={to}
               className={`sidebar-link ${location.pathname === to ? "active" : ""}`}
-              onClick={()=>closeSidebar()}
+              onClick={() => closeSidebar()}
             >
               <span className="sidebar-link-inner">{label}</span>
               {badge && (
-                <span className={`sidebar-badge ${badgeClass || ""}`}>{badge}</span>
+                <span className={`sidebar-badge ${badgeClass || ""}`}>
+                  {badge}
+                </span>
               )}
             </Link>
           ))}
@@ -161,20 +173,18 @@ const UserBackgroundLayout = ({ children}) => {
             >
               ☰
             </button>
-            <span className="main-topbar-greeting">
-              {currentTitle}
-            </span>
+            <span className="main-topbar-greeting">{currentTitle}</span>
           </div>
 
           <div className="main-topbar-right">
-            <div className="profile-circle" onClick={handleUserData}>{initials}</div>
+            <div className="profile-circle" onClick={handleUserData}>
+              {initials}
+            </div>
           </div>
         </header>
 
         {/* Page content */}
-        <main className="main-page-body">
-          {children}
-        </main>
+        <main className="main-page-body">{children}</main>
       </div>
 
       {/* Logout Popup */}
@@ -183,9 +193,20 @@ const UserBackgroundLayout = ({ children}) => {
           <div className="popup">
             <h3>Are you sure you want to logout?</h3>
             <div className="buttons">
+              <button className="logout-confirm-btn" onClick={handleLogout}>
+                Logout
+              </button>
+              <button
+                className="cancel-btn"
+                onClick={() => setShowLogoutPopup(false)}
+              >
+                Cancel
+              </button>
+            </div>
+            {/* <div className="buttons">
               <button onClick={handleLogout}>Logout</button>
               <button onClick={() => setShowLogoutPopup(false)}>Cancel</button>
-            </div>
+            </div> */}
           </div>
         </div>
       )}
