@@ -17,7 +17,7 @@ const Authentication = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if(photo==null){
-      setError("Please choose your ID Card*");
+      setError("*Please choose your ID Card");
     }else{
     axios
       .post(
