@@ -69,7 +69,7 @@ const SearchByTimeSlot = () => {
       setError("");
       axios
         .post(
-          "http://localhost:3000/meeting/scheduleMeeting/",
+          API_URL + "/meeting/scheduleMeeting/",
           {
             title: newEvent.title,
             date: newEvent.date,
@@ -111,12 +111,11 @@ const SearchByTimeSlot = () => {
   const handleSearch = () => {
     if (participantID.length == 0) {
       setError("*Please select employees");
-    }
-    else{
+    } else {
       setError("");
       axios
         .post(
-          "http://localhost:3000/search/searchByTimeslot",
+          API_URL + "/search/searchByTimeslot",
           { uid: participantID },
           {
             headers: { Authorization: "Bearer " + token },
