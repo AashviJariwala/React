@@ -1018,10 +1018,9 @@ textarea {
 /* ================================ */
 /* EVENT POPUPS                     */
 /* ================================ */
-
 .event-popup-overlay {
   position: fixed;
-  top: 45px;
+  top: 0;             /* changed from 45px — covers full screen on mobile */
   left: 0;
   width: 100%;
   height: 100%;
@@ -1030,11 +1029,17 @@ textarea {
   justify-content: center;
   align-items: center;
   z-index: 500;
+  padding: 16px;      /* prevents popup from touching screen edges */
+  box-sizing: border-box;
+  /* fixes iOS Safari overscroll issues */
+  -webkit-overflow-scrolling: touch;
 }
 
 .event-popup {
-  width: 500px;
-  height: 540px;
+  width: 100%;
+  max-width: 500px;       /* was fixed 500px — now fluid */
+  max-height: 90vh;       /* never taller than viewport */
+  height: auto;           /* was fixed 540px — now content-driven */
   background: white;
   padding: 20px;
   border-radius: 12px;
@@ -1042,6 +1047,8 @@ textarea {
   flex-direction: column;
   gap: 5px;
   position: relative;
+  overflow-y: auto;       /* scroll inside popup if content overflows */
+  box-sizing: border-box;
 }
 
 .close-popup {
@@ -1056,9 +1063,12 @@ textarea {
 
 .event-popup input,
 .event-popup textarea {
+  width: 100%;            /* ensures inputs don't overflow on small screens */
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #ddd;
+  box-sizing: border-box;
+  font-size: 16px;        /* prevents iOS auto-zoom on focus (must be ≥16px) */
 }
 
 .save-event-btn {
@@ -1069,8 +1079,9 @@ textarea {
   padding: 10px;
   border-radius: 8px;
   cursor: pointer;
+  width: 100%;
+  font-size: 16px;        /* consistent tap target on mobile */
 }
-
 .event-view-overlay {
   position: fixed;
   top: 0;
