@@ -109,7 +109,7 @@ const UserData = () => {
             >
               {userData?.userIDCard ? (
                 <img
-                  src={`${API_URL}/public/${userData.userIDCard}`}
+                  src={userData.userIDCard}
                   alt="ID Card"
                   style={{
                     height: "350px",
