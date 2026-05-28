@@ -16,6 +16,7 @@ const SearchByTimeSlot = () => {
     end: "",
     description: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
   const token = sessionStorage.getItem("userToken");
@@ -69,7 +70,7 @@ const SearchByTimeSlot = () => {
       setError("");
       axios
         .post(
-          API_URL + "/meeting/scheduleMeeting/",
+          `${API_URL}/meeting/scheduleMeeting/`,
           {
             title: newEvent.title,
             date: newEvent.date,
@@ -109,23 +110,26 @@ const SearchByTimeSlot = () => {
 
   // search free slots
   const handleSearch = () => {
+    setIsLoading(true);
     if (participantID.length == 0) {
       setError("*Please select employees");
     } else {
       setError("");
       axios
         .post(
-          API_URL + "/search/searchByTimeslot",
+          `${API_URL}/search/searchByTimeslot`,
           { uid: participantID },
           {
             headers: { Authorization: "Bearer " + token },
           },
         )
         .then((res) => {
-          setFreeSlots(res.data.data); // <-- important
+          setFreeSlots(res.data.data); 
+          setIsLoading(false);
         })
         .catch((err) => {
           console.log(err.response?.data?.error);
+          setIsLoading(false);
         });
     }
   };
@@ -168,6 +172,7 @@ const SearchByTimeSlot = () => {
             {freeSlots.length === 0 ? (
               <p className="no-slots">No common free slots found</p>
             ) : (
+              (isLoading ?  "Loading..." : 
               <div className="slots-grid">
                 {freeSlots.map((slot, index) => (
                   <div
@@ -180,6 +185,7 @@ const SearchByTimeSlot = () => {
                   </div>
                 ))}
               </div>
+              )
             )}
           </div>
         </div>

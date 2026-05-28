@@ -62,19 +62,19 @@ const UserBackgroundLayout = ({ children}) => {
 
   const navItems = [
     { to: "/dashboard", label: "Dashboard" },
-    { to: "/search", label: "People"},
-    { to: "/meeting", label: "Invite Employees", },
-    { to: "/collab", label: "Collababoration" },
-    { to: "/searchByTimeslot", label:"Schedule Meeting" },
+    { to: "/search", label: "Employees" },
+    { to: "/meeting", label: "Invite Employees" },
+    { to: "/collab", label: "Collaboration" },
+    { to: "/searchByTimeslot", label: "Schedule Meeting" },
     { to: "/updateCard", label: "Update ID Card" },
     { to: "/editVisibility", label: "Update Visibility" },
   ];
 
   const pageTitles = {
     "/dashboard": "Dashboard",
-    "/search": "People",
+    "/search": "Employees",
     "/meeting": "Invite Employees",
-    "/collab": "Collababoration",
+    "/collab": "Collaboration",
     "/searchByTimeslot": "Schedule Meeting",
     "/updateCard": "Update ID Card",
     "/editVisibility": "Update Visibility",
