@@ -9,6 +9,7 @@ const SearchByTimeSlot = () => {
   const [participantID, setParticipantID] = useState([]);
   const [freeSlots, setFreeSlots] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
   const [newEvent, setNewEvent] = useState({
     title: "",
     date: "",
@@ -110,11 +111,13 @@ const SearchByTimeSlot = () => {
 
   // search free slots
   const handleSearch = () => {
-    setIsLoading(true);
     if (participantID.length == 0) {
       setError("*Please select employees");
     } else {
       setError("");
+       setFreeSlots([]); 
+      setIsLoading(true);
+       setHasSearched(true);
       axios
         .post(
           `${API_URL}/search/searchByTimeslot`,
@@ -169,10 +172,11 @@ const SearchByTimeSlot = () => {
           <div className="slots-card">
             <h3 className="slots-title">Available Time Slots</h3>
 
-            {freeSlots.length === 0 ? (
+            {isLoading ? (
+              <p>Loading...</p>
+            ) : !hasSearched || freeSlots.length === 0 ? (
               <p className="no-slots">No common free slots found</p>
             ) : (
-              (isLoading ?  "Loading..." : 
               <div className="slots-grid">
                 {freeSlots.map((slot, index) => (
                   <div
@@ -185,7 +189,6 @@ const SearchByTimeSlot = () => {
                   </div>
                 ))}
               </div>
-              )
             )}
           </div>
         </div>
