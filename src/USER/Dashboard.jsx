@@ -23,6 +23,7 @@ const Dashboard = () => {
   const [view, setView] = useState("month");
   const [date, setDate] = useState(new Date());
   const [error, setError] = useState("");
+  const [dashboardError, setDashboardError] = useState("");
   const [event, setEvent] = useState([]);
   const [newEvent, setNewEvent] = useState({
     title: "",
@@ -84,98 +85,69 @@ const Dashboard = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!editMode) {
-      if (
-        newEvent.title == "" ||
-        newEvent.date == "" ||
-        newEvent.start == "" ||
-        newEvent.end == ""
-      ) {
-        setError("*Please fill out all the required fields");
-      } else if (
-        new Date(newEvent.date).toDateString() === new Date().toDateString()
-      ) {
-        if (newEvent.start < new Date().toTimeString().slice(0, 5))
-          setError("*Start time cannot be in the past");
-        else {
-          setError("");
-          axios
-            .post(
-              API_URL + "/calendar/createEvent/",
-              {
-                title: newEvent["title"],
-                date: newEvent["date"],
-                start: newEvent["start"],
-                end: newEvent["end"],
-                description: newEvent["description"],
-                visibility: visibility,
-              },
-              {
-                headers: {
-                  Authorization: "Bearer " + token,
-                },
-              }
-            )
-            .then((res) => {
-              console.log(res.data.data);
-              setShowPopup(false);
-              getEvents();
-            })
-            .catch((err) => {
-              console.log(err.response.data.error);
-              setError(err.response.data.error + "*");
-            });
-        }
-      }
-    } else {
-      if (
-        editEvent.title == "" ||
-        editEvent.date == "" ||
-        editEvent.start == "" ||
-        editEvent.end == ""
-      ) {
-        setError("*Please fill out all the required fields");
-      } else if (
-        new Date(editEvent.date).toDateString() === new Date().toDateString()
-      ) {
-        if (editEvent.start < new Date().toTimeString().slice(0, 5))
-          setError("*Start time cannot be in the past");
-        else {
-          setError("");
-          axios
-            .put(
-              API_URL +
-                "/calendar/editEvent/" +
-                selectedEvent._id +
-                "/" +
-                selectedEvent.googleEventID,
-              {
-                title: editEvent["title"],
-                date: editEvent["date"],
-                start: editEvent["start"],
-                end: editEvent["end"],
-                description: editEvent["description"],
-                visibility: visibility,
-              },
-              {
-                headers: {
-                  Authorization: "Bearer " + token,
-                },
-              }
-            )
-            .then((res) => {
-              console.log(res.data.data);
-              setEditMode(false);
-              setShowPopup(false);
-              getEvents();
-            })
-            .catch((err) => {
-              console.log(err.response.data.error);
-              setError(err.response.data.error + "*");
-            });
-        }
-      }
+
+    const event = editMode ? editEvent : newEvent;
+
+    if (!event.title || !event.date || !event.start || !event.end) {
+      setError("*Please fill out all the required fields");
+      return;
     }
+
+    const isToday =
+      new Date(event.date).toDateString() === new Date().toDateString();
+    if (isToday && event.start < new Date().toTimeString().slice(0, 5)) {
+      setError("*Start time cannot be in the past");
+      return;
+    }
+
+    setError("");
+
+    const request = editMode
+      ? axios.put(
+          API_URL +
+            "/calendar/editEvent/" +
+            selectedEvent._id +
+            "/" +
+            selectedEvent.googleEventID,
+          {
+            title: event.title,
+            date: event.date,
+            start: event.start,
+            end: event.end,
+            description: event.description,
+            visibility,
+          },
+          { headers: { Authorization: "Bearer " + token } }
+        )
+      : axios.post(
+          API_URL + "/calendar/createEvent/",
+          {
+            title: event.title,
+            date: event.date,
+            start: event.start,
+            end: event.end,
+            description: event.description,
+            visibility,
+          },
+          { headers: { Authorization: "Bearer " + token } }
+        );
+
+    request
+      .then((res) => {
+        console.log(res.data.data);
+        setNewEvent({});
+        if (editMode) {
+          setEditEvent({});
+          setEditMode(false);
+        }
+        setShowPopup(false);
+
+        getEvents();
+      })
+      .catch((err) => {
+        console.log(err.response.data.error);
+        setError(err.response.data.error + "*");
+      });
   };
 
   const handleUpdate = (e) => {
@@ -237,12 +209,13 @@ const Dashboard = () => {
         const safeEvents = (res.data.data || []).filter(
           (e) => e && e.start && e.end
         );
+        setDashboardError("");
         setEvent(safeEvents);
         setIsLoading(false);
       })
       .catch((err) => {
         console.log(err.response.data.error);
-        setError(err.response.data.error + "*");
+        setDashboardError("*Failed to fetch calendar details");
         setIsLoading(false);
       });
   }
@@ -655,7 +628,9 @@ const Dashboard = () => {
             </div>
           </div>
         )}
-        {error && <div className="error-message">{error}</div>}
+        {dashboardError && (
+          <div className="error-message">{dashboardError}</div>
+        )}
       </div>
     </div>
   );

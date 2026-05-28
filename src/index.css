@@ -1071,6 +1071,35 @@ textarea {
   cursor: pointer;
 }
 
+@media (max-width: 540px) {
+  .event-popup-overlay {
+    top: 0;                /* cover full screen including the 45px gap */
+    align-items: center;
+    padding: 16px;         /* breathing room from screen edges */
+    box-sizing: border-box;
+  }
+
+  .event-popup {
+    width: 100%;           /* fill available width minus overlay padding */
+    height: auto;          /* grow with content instead of fixed 540px */
+    max-height: 90vh;      /* never overflow the viewport */
+    overflow-y: auto;      /* scroll inside if content is tall */
+    box-sizing: border-box;
+  }
+
+  .event-popup input,
+  .event-popup textarea {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;       /* prevents iOS Safari auto-zoom on focus */
+  }
+
+  .save-event-btn {
+    width: 100%;
+    font-size: 16px;
+  }
+}
+
 .event-view-overlay {
   position: fixed;
   top: 0;
