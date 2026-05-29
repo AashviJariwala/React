@@ -9,6 +9,7 @@ const SearchByTimeSlot = () => {
   const [participantID, setParticipantID] = useState([]);
   const [freeSlots, setFreeSlots] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
   const [newEvent, setNewEvent] = useState({
     title: "",
     date: "",
@@ -16,6 +17,7 @@ const SearchByTimeSlot = () => {
     end: "",
     description: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
   const token = sessionStorage.getItem("userToken");
@@ -69,7 +71,7 @@ const SearchByTimeSlot = () => {
       setError("");
       axios
         .post(
-          API_URL + "/meeting/scheduleMeeting/",
+          `${API_URL}/meeting/scheduleMeeting/`,
           {
             title: newEvent.title,
             date: newEvent.date,
@@ -113,19 +115,24 @@ const SearchByTimeSlot = () => {
       setError("*Please select employees");
     } else {
       setError("");
+       setFreeSlots([]); 
+      setIsLoading(true);
+       setHasSearched(true);
       axios
         .post(
-          API_URL + "/search/searchByTimeslot",
+          `${API_URL}/search/searchByTimeslot`,
           { uid: participantID },
           {
             headers: { Authorization: "Bearer " + token },
           },
         )
         .then((res) => {
-          setFreeSlots(res.data.data); // <-- important
+          setFreeSlots(res.data.data); 
+          setIsLoading(false);
         })
         .catch((err) => {
           console.log(err.response?.data?.error);
+          setIsLoading(false);
         });
     }
   };
@@ -165,8 +172,9 @@ const SearchByTimeSlot = () => {
           <div className="slots-card">
             <h3 className="slots-title">Available Time Slots</h3>
 
-            
-            {freeSlots.length === 0 ? (
+            {isLoading ? (
+              <p>Loading...</p>
+            ) : !hasSearched || freeSlots.length === 0 ? (
               <p className="no-slots">No common free slots found</p>
             ) : (
               <div className="slots-grid">
