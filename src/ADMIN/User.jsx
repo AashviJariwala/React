@@ -58,7 +58,7 @@ const User = () => {
                    <td>{user.email}</td>
                    <td>
                      <img
-                       src={`${API_URL}/public/${user.idCard}`}
+                       src={user.idCard}
                        alt="ID Card"
                      />
                    </td>

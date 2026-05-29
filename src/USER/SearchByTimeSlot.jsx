@@ -165,6 +165,7 @@ const SearchByTimeSlot = () => {
           <div className="slots-card">
             <h3 className="slots-title">Available Time Slots</h3>
 
+            
             {freeSlots.length === 0 ? (
               <p className="no-slots">No common free slots found</p>
             ) : (
