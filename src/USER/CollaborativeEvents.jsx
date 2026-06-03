@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../config";
 import { format, parse, startOfWeek, getDay } from "date-fns";
+import { getEmployees } from "./EmployeeCache";
 
 const CollaborativeEvents = () => {
   const navigate = useNavigate();
@@ -19,19 +20,6 @@ const CollaborativeEvents = () => {
   const [showPopup, setShowPopup] = useState(false);
 
   const token = sessionStorage.getItem("userToken");
-
-  function getData() {
-    axios
-      .get(API_URL + "/search/showAllEmployee", {
-        headers: { Authorization: "Bearer " + token },
-      })
-      .then((res) => {
-        setResult(res.data.data);
-      })
-      .catch((err) => {
-        setError(err.response?.data?.error || "Error");
-      });
-  }
 
   const handleParticipantChange = (e) => {
     const value = e.target.value;
@@ -59,6 +47,7 @@ const CollaborativeEvents = () => {
       setShowPopup(true);
     }
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (
@@ -92,8 +81,7 @@ const CollaborativeEvents = () => {
               },
             }
           )
-          .then((res) => {
-            console.log(res.data.msg);
+          .then(() => {
             setShowPopup(false);
             navigate("/dashboard");
           })
@@ -105,7 +93,9 @@ const CollaborativeEvents = () => {
     }
   };
   useEffect(() => {
-    getData();
+    getEmployees(token)
+    .then((data) => setResult(data))
+    .catch((err) => setError(err.response.data.error));
   }, []);
 
   return (

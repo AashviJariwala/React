@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../config";
+import { getEmployees } from "./EmployeeCache";
+
 
 const SearchByTimeSlot = () => {
   const [error, setError] = useState("");
@@ -21,20 +23,6 @@ const SearchByTimeSlot = () => {
 
   const navigate = useNavigate();
   const token = sessionStorage.getItem("userToken");
-
-  // get all users
-  function getData() {
-    axios
-      .get(`${API_URL}/search/showAllEmployee`, {
-        headers: { Authorization: "Bearer " + token },
-      })
-      .then((res) => {
-        setResult(res.data.data);
-      })
-      .catch((err) => {
-        setError(err.response?.data?.error || "Error");
-      });
-  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -138,7 +126,9 @@ const SearchByTimeSlot = () => {
   };
 
   useEffect(() => {
-    getData();
+    getEmployees(token)
+    .then((data) => setResult(data))
+    .catch((err) => setError(err.response.data.error));
   }, []);
 
   return (

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../config";
+import { getEmployees } from "./EmployeeCache";
+
 
 const Meeting = () => {
   const navigate = useNavigate();
@@ -15,22 +17,6 @@ const Meeting = () => {
   const [query, setQuery] = useState("");
   const [searchRes, setSearchRes] = useState([]);
 
-  function getData() {
-    axios
-      .get(API_URL + "/search/showAllEmployee", {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((res) => {
-        setResult(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err.response.data.error);
-        setError(err.response.data.error + "*");
-      });
-  }
-
   function getMeetingData() {
     axios
       .get(API_URL + "/meeting/getAllMeetings", {
@@ -39,7 +25,6 @@ const Meeting = () => {
         },
       })
       .then((res) => {
-        console.log(res.data.data);
         setMeetingLink(res.data.data);
       })
       .catch((err) => {
@@ -75,7 +60,9 @@ const Meeting = () => {
   };
   useEffect(() => {
     if (query.length === 0) {
-      getData();
+      getEmployees(token)
+        .then((data) => setResult(data))
+        .catch((err) => setError(err.response.data.error));
       return;
     }
     const delay = setTimeout(() => {
