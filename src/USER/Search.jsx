@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "../config";
-
-// Outside component — persists for the whole session
-let employeeCache = null;
+import {API_URL} from "../config"
 
 const Search = () => {
   const navigate = useNavigate();
@@ -16,19 +13,14 @@ const Search = () => {
   const [searchRes, setSearchRes] = useState([]);
 
   function getData() {
-    if (employeeCache) {
-      setResult(employeeCache);
-      return;
-    }
     axios
-      .get(API_URL + "/search/showAllEmployee", {
+      .get(API_URL+"/search/showAllEmployee", {
         headers: {
           Authorization: "Bearer " + token,
         },
       })
       .then((res) => {
         console.log(res.data.data);
-        employeeCache = res.data.data;
         setResult(res.data.data);
       })
       .catch((err) => {
@@ -44,7 +36,7 @@ const Search = () => {
     }
     const delay = setTimeout(() => {
       axios
-        .get(API_URL + "/search/searchProfile/" + query, {
+        .get(API_URL+"/search/searchProfile/" + query, {
           headers: {
             Authorization: "Bearer " + token,
           },
@@ -63,7 +55,6 @@ const Search = () => {
       state: { id: r._id },
     });
   };
-
   return (
     <>
       <div className="search-container">
@@ -74,6 +65,7 @@ const Search = () => {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
+
           <span className="search-icon">🔍</span>
         </div>
       </div>
