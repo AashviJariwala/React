@@ -27,7 +27,9 @@ const GoogleCallback = () => {
           if (res.data.data == 0) navigate("/authentication");
           else {
             navigate("/dashboard");
-            
+            setTimeout(() => {
+              getEmployees(token).catch(console.error);
+           },0);
           }
         })
         .catch((err) => {
