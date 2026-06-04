@@ -4,6 +4,7 @@ import { API_URL } from "../config";
 import axios from "axios";
 import { getEmployees } from "./EmployeeCache";
 
+
 const GoogleCallback = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,9 +27,7 @@ const GoogleCallback = () => {
           if (res.data.data == 0) navigate("/authentication");
           else {
             navigate("/dashboard");
-            setTimeout(() => {
-              getEmployees(token).catch(console.error);
-            }, 0);
+            
           }
         })
         .catch((err) => {
