@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { API_URL } from "../config";
 import axios from "axios";
+import { getEmployees } from "./EmployeeCache";
+
 
 const GoogleCallback = () => {
   const navigate = useNavigate();
@@ -23,7 +25,9 @@ const GoogleCallback = () => {
         })
         .then((res) => {
           if (res.data.data == 0) navigate("/authentication");
-          else navigate("/dashboard");
+          else {
+            getEmployees(token);
+            navigate("/dashboard");}
         })
         .catch((err) => {
           console.log(err.response.data.error);
