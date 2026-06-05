@@ -28,7 +28,7 @@ const Meeting = () => {
         setMeetingLink(res.data.data);
       })
       .catch((err) => {
-        console.log(err.response.data.error);
+        // console.log(err.response.data.error);
         setError(err.response.data.error + "*");
       });
   }
