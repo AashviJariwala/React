@@ -50,20 +50,25 @@ const CollaborativeEvents = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (
-      newEvent.title == "" ||
-      newEvent.date == "" ||
-      newEvent.start == "" ||
-      newEvent.end == ""
-    ) {
-      setError("*Please fill out all the required fields");
-    } else if (
-      new Date(newEvent.date).toDateString() === new Date().toDateString()
-    ) {
-      if (newEvent.start < new Date().toTimeString().slice(0, 5)) {
+      if (
+        !newEvent.title ||
+        !newEvent.date ||
+        !newEvent.start ||
+        !newEvent.end
+      ) {
+        setError("*Please fill out all the required fields");
+        return;
+      }
+
+      const isToday =
+        new Date(newEvent.date).toDateString() === new Date().toDateString();
+      if (isToday && newEvent.start < new Date().toTimeString().slice(0, 5)) {
         setError("*Start time cannot be in the past");
-      } else {
+        return;
+      }
+   
         setError("");
+        
         axios
           .post(
             API_URL + "/calendar/createCollaborativeEvent/",
@@ -89,8 +94,7 @@ const CollaborativeEvents = () => {
             console.log(err.response.data.error);
             setError(err.response.data.error + "*");
           });
-      }
-    }
+      
   };
   useEffect(() => {
     getEmployees(token)
