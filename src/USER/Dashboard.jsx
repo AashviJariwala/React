@@ -93,14 +93,11 @@ const Dashboard = () => {
       return;
     }
 
-    if(!editMode){
       const isToday =
       new Date(event.date).toDateString() === new Date().toDateString();
     if (isToday && event.start < new Date().toTimeString().slice(0, 5)) {
       setError("*Start time cannot be in the past");
       return;
-    }
-
     }
  
     setError("");
@@ -516,7 +513,7 @@ const Dashboard = () => {
                     name="date"
                     value={editEvent.date}
                     onChange={handleChange}
-                    min={format(new Date(), "yyyy-MM-dd")}
+                    // min={format(new Date(), "yyyy-MM-dd")}
                   />
                   <label>
                     Start Time<span className="asterisk">*</span>
