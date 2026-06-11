@@ -93,13 +93,16 @@ const Dashboard = () => {
       return;
     }
 
-    const isToday =
+    if(!editMode){
+      const isToday =
       new Date(event.date).toDateString() === new Date().toDateString();
     if (isToday && event.start < new Date().toTimeString().slice(0, 5)) {
       setError("*Start time cannot be in the past");
       return;
     }
 
+    }
+ 
     setError("");
 
     const request = editMode
